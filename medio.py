@@ -56,7 +56,7 @@ def generar_txt(df,ruta):
         print(f"Error al generar el archivo: {e}")
 
 class ExcelTransformer:
-    def __init__(self,  reglas_path="reglas.json"):
+    def __init__(self,  reglas_path="data/reglas.json"):
         self.reglas = self.cargar_reglas(reglas_path)
         self.columnas_a_transformar = [regla["nombre"] for regla in self.reglas]
 
