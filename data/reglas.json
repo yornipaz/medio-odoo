@@ -1,0 +1,17 @@
+[
+	{ 
+		"nombre": "ANIO",
+		"tipo": "NUMERICO",
+		"TAMANO": 4
+	},
+	{ 
+		"nombre": "CONCEPTO",
+		"tipo": "ALFANUMERICO",
+		"TAMANO": 10
+	},
+	{ 
+		"nombre": "VALOR",
+		"tipo": "NUMERICO",
+		"TAMANO": 20
+	}
+] 
