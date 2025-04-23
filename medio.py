@@ -1,9 +1,85 @@
 import sys
 import pandas as pd
 import json
-import numpy as np 
+import numpy as np
 from abc import ABC, abstractmethod
 from typing import List, Optional
+
+
+class Transformacion(ABC):
+    @abstractmethod
+    def transformar(self, df, columna_nombre, regla):
+        pass
+
+
+class TransformacionAnio(Transformacion):
+    def transformar(self, df, columna_nombre, regla):
+        if columna_nombre in df.columns:
+            try:
+                df[columna_nombre] = df[columna_nombre].astype(
+                    int).astype(str).str.zfill(regla["TAMANO"])
+            except (ValueError, TypeError):
+                return None
+        return df
+
+
+class TransformacionConcepto(Transformacion):
+    def transformar(self, df, columna_nombre, regla):
+        if columna_nombre in df.columns:
+            df[columna_nombre] = df[columna_nombre].astype(str).str[:regla["TAMANO"]].str.ljust(regla["TAMANO"], '$')
+        return df
+
+
+class TransformacionValor(Transformacion):
+    def transformar(self, df, columna_nombre, regla):
+        if columna_nombre in df.columns:
+            try:
+                if pd.isna(df[columna_nombre]).any():
+                    df[columna_nombre] = df[columna_nombre].replace(np.nan, '')
+                df[columna_nombre] = df[columna_nombre].astype(
+                    int).astype(str).str.zfill(regla["TAMANO"])
+            except (ValueError, TypeError):
+                return None
+        return df
+
+
+class TransformacionFactory:
+    def crear_transformacion(self, nombre_columna):
+        if nombre_columna == "ANIO":
+            return TransformacionAnio()
+        elif nombre_columna == "CONCEPTO":
+            return TransformacionConcepto()
+        elif nombre_columna == "VALOR":
+            return TransformacionValor()
+        else:
+            raise ValueError(
+                f"Tipo de transformación desconocido: {nombre_columna}")
+
+
+class ExcelTransformer:
+    def __init__(self, reglas: List[dict], transformacion_factory: TransformacionFactory, columnas_a_transformar: Optional[List[str]] = None):
+        self.reglas = reglas
+        self.transformacion_factory = transformacion_factory
+        self.columnas_a_transformar = columnas_a_transformar if columnas_a_transformar else [
+            regla["nombre"] for regla in self.reglas]
+
+    def transformar_dataframe(self, df: pd.DataFrame) -> Optional[pd.DataFrame]:
+        df_transformado = df[self.columnas_a_transformar].copy()
+
+        for regla in self.reglas:
+            nombre_columna = regla["nombre"]
+            if nombre_columna in self.columnas_a_transformar:
+                transformacion = self.transformacion_factory.crear_transformacion(
+                    nombre_columna)
+                if transformacion:
+                    resultado = transformacion.transformar(
+                        df_transformado, nombre_columna, regla)
+                    if resultado is None:
+                        return None
+                    df_transformado = resultado
+
+        return df_transformado.astype(str).replace({np.nan: ''}, regex=False)
+
 
 def leer_excel(url):
     """
@@ -20,9 +96,10 @@ def leer_excel(url):
         return df
     except Exception as e:
         print(f"Error al leer el archivo: {e}")
-        return None
-    
-def leer_json(url ):
+        return e
+
+
+def leer_json(url):
     """
     Lee el archivo JSON desde la URL proporcionada.
 
@@ -39,7 +116,9 @@ def leer_json(url ):
     except Exception as e:
         print(f"Error al leer el archivo: {e}")
         return None
-def generar_txt(df,ruta):
+
+
+def generar_txt(df, ruta):
     """
     Genera un archivo de texto a partir de un DataFrame.
 
@@ -47,92 +126,19 @@ def generar_txt(df,ruta):
         df (pandas.DataFrame): DataFrame a convertir.
         ruta (str): Ruta donde se guardará el archivo de texto.
     """
-    try:
-        with open(ruta, 'w') as file:
-            for index, row in df.iterrows():
-                file.write(f"{row.to_json()}\n")
-        print(f"Archivo generado en: {ruta}")
-    except Exception as e:
-        print(f"Error al generar el archivo: {e}")
 
-class ExcelTransformer:
-    def __init__(self,  reglas_path="data/reglas.json"):
-        self.reglas = self.cargar_reglas(reglas_path)
-        self.columnas_a_transformar = [regla["nombre"] for regla in self.reglas]
+    df_string = df.to_string(index=False, header=False)
+    df_string = df_string.replace(' ', '')
+    df_string = df_string.replace('\n', ' ')
+    df_string = df_string.replace('  ', ' ')
+    print("\nDataFrame transformado:")
+    print(df_string)
 
-    def cargar_reglas(self, reglas_path):
-        try:
-            with open(reglas_path, 'r') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            print(f"Error: No se encontró el archivo de reglas en: {reglas_path}")
-            sys.exit(1)
-    def transformar_anio(self, df):
-        if "ANIO" in df.columns:
-            try:
-                df["ANIO"] = df["ANIO"].astype(int).astype(str).str.zfill(4)
-            except (ValueError, TypeError):
-                pass
-        return df
+    with open(ruta, 'w') as f:
+        f.write(df_string)
 
-    def transformar_concepto(self, df):
-        if "CONCEPTO" in df.columns:
-            df["CONCEPTO"] = df["CONCEPTO"].astype(str).str[:10].str.ljust(10, '$')
-        return df
+    print(f"Archivo .txt generado exitosamente en: {ruta}")
 
-    def transformar_valor(self, df):
-        if "VALOR" in df.columns:
-            try:
-                if pd.isna(df["VALOR"]).any():
-                    df["VALOR"] = df["VALOR"].replace(np.nan, '')
-                df["VALOR"] = df["VALOR"].astype(int).astype(str).str.zfill(20)
-            except (ValueError, TypeError):
-                pass
-        return df
-
-    def transformar_dataframe(self, df):
-        # Crear un nuevo DataFrame con solo las columnas a transformar
-        df_transformado = df[self.columnas_a_transformar].copy()
-
-        df_transformado = self.transformar_anio(df_transformado)
-        df_transformado = self.transformar_concepto(df_transformado)
-        df_transformado = self.transformar_valor(df_transformado)
-
-        return df_transformado.astype(str).replace({np.nan: ''}, regex=False)
-
-    def process_excel_to_txt(self, excel_path, txt_path):
-        try:
-            df = pd.read_excel(excel_path)
-
-            print("Tipos de datos antes de la transformación:")
-            print(df.dtypes)
-
-            # Filtrar el DataFrame original para incluir solo las columnas a transformar
-            df = df[self.columnas_a_transformar].copy()
-
-            df = self.transformar_dataframe(df)
-
-            print("\nTipos de datos después de la transformación:")
-            print(df)
-            # Convertir a string y eliminar espacios
-            df_string = df.to_string(index=False, header=False)
-            df_string = df_string.replace(' ', '')
-            df_string = df_string.replace('\n', ' ')
-            df_string = df_string.replace('  ', ' ')
-            print("\nDataFrame transformado:")
-            print(df_string)
-          
-
-            with open(txt_path, 'w') as f:
-                f.write(df_string)
-
-            print(f"Archivo .txt generado exitosamente en: {txt_path}")
-
-        except FileNotFoundError:
-            print(f"Error: No se encontró el archivo Excel en: {excel_path}")
-        except Exception as e:
-            print(f"Ocurrió un error: {e}")
-            print(e)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -145,5 +151,23 @@ if __name__ == "__main__":
         if reglas is None:
             print("Error al cargar las reglas.")
             sys.exit(1)
-        transformer = ExcelTransformer()
-        transformer.process_excel_to_txt(excel_path, txt_path)
+
+        try:
+            df = leer_excel(excel_path)
+            factory = TransformacionFactory()
+            columnas_a_transformar = ["ANIO", "CONCEPTO", "VALOR"]
+            transformer = ExcelTransformer(
+                reglas, factory, columnas_a_transformar)
+            df_transformado = transformer.transformar_dataframe(df.copy())
+            if df_transformado is not None:
+                generar_txt(df_transformado, txt_path)
+            else:
+                print("Error en la transformación del DataFrame.")
+                sys.exit(1)
+        except Exception as e:
+            print(
+                f"Error durante la transformación o generación del archivo: {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"Error al leer el archivo Excel: {e}")
+            sys.exit(1)
