@@ -1,71 +1,139 @@
-#   Medios Magnéticos
+# Proyecto Medios Magnéticos Odoo 16
 
-Este proyecto automatiza el proceso de Medios Magnéticos. La automatización implica la conversión de datos desde archivos Excel a archivos de texto (`.txt`) con un formato específico, aplicando reglas de transformación. 
+Este sistema automatiza el proceso de generación de **Medios Magnéticos** requerido por el área financiera. Permite cargar un archivo Excel con columnas específicas y transformarlo en un archivo `.txt` siguiendo un conjunto de reglas estrictas. La solución está compuesta por un **script Python** y un **módulo de integración con Odoo 16**, facilitando el manejo de la información directamente desde una interfaz gráfica.
 
-El proyecto se compone de dos partes principales:
+## Tabla de Contenido
 
-1.  **Script de Transformación de Datos (Python):** Un script en Python que toma un archivo Excel como entrada, transforma los datos de acuerdo con reglas predefinidas, y genera un archivo `.txt` como salida. 
-2.  **Módulo de Integración con Odoo 16:** Un módulo de Odoo 16 que proporciona una interfaz de usuario para cargar archivos Excel, disparar la transformación de datos (utilizando el script de Python), y descargar el archivo `.txt` resultante. 
+- [Descripción](#descripción)
+- [Funcionalidades Principales](#funcionalidades-principales)
+- [Prerequisitos](#prerequisitos)
+- [¿Cómo iniciar?](#cómo-iniciar)
+- [Trabajando con contenedores](#trabajando-con-contenedores)
+  - [Dockerizado](#dockerizado)
+  - [Docker compose](#docker-compose)
+- [Variables de entorno](#variables-de-entorno)
+- [Sistema de archivos](#sistema-de-archivos)
 
-El objetivo final es optimizar el flujo de trabajo, reducir errores manuales y aumentar la eficiencia en el manejo de la información financiera. 
+## Descripción
 
-#   Tecnologías Utilizadas
+El sistema está diseñado para:
 
-* **Contenedorización:** Docker se utiliza para empaquetar la aplicación Odoo 16 y la base de datos PostgreSQL, asegurando la portabilidad y consistencia del entorno.
-* **Base de Datos:** PostgreSQL es el sistema de gestión de base de datos relacional utilizado para almacenar los datos de Odoo.
-* **Lenguaje de Programación:** Python 3 se utiliza para desarrollar el script de transformación de datos.
-* **Librerías de Python:**
-    * `pandas`: Para la manipulación y análisis de datos, especialmente para leer y procesar los archivos Excel.
-    * `json`: Para trabajar con datos en formato JSON (aunque no se especifica un uso extensivo de JSON en el documento, podría ser útil para la configuración o el manejo de reglas). [cite: 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-    * `numpy`: Para operaciones numéricas eficientes, especialmente si se requiere un manejo avanzado de los datos en la columna "VALOR".
-    * `abc`: Para trabajar con clases abstractas (su uso específico dependerá del diseño del script, pero podría utilizarse para definir una interfaz para los transformadores de datos).
-* **ERP:** Odoo 16 es el sistema de planificación de recursos empresariales (ERP) donde se integra la funcionalidad. 
+- Transformar datos de archivos Excel en archivos `.txt` según reglas de formato.
+- Integrar esta transformación dentro de una interfaz en Odoo 16.
+- Descargar automáticamente el archivo `.txt` resultante desde el ERP.
 
-#   Entorno y Configuración
+## Funcionalidades Principales
 
-Para la correcta ejecución del proyecto, se definen las siguientes variables de entorno:
+- **Script Python (`medio.py`)**:
+  - Recibe una URL local del archivo Excel.
+  - Aplica reglas de transformación:
+    - ANIO: cuatro dígitos, completado con ceros a la izquierda.
+    - CONCEPTO: máximo 10 caracteres, completado con `$`.
+    - VALOR: hasta 20 dígitos, completado con ceros a la izquierda.
+  - Genera un `.txt` con el formato correcto.
+- **Módulo Odoo 16**:
+  - Interfaz para cargar archivo Excel.
+  - Botón para transformar y descargar archivo `.txt`.
 
-* `POSTGRES_USER=mi_usuario_db`
-* `POSTGRES_PASSWORD=mi_contraseña_segura`
-* `POSTGRES_DB=mi_basededatos`
-* `POSTGRES_PORT=5432`
-* `ODOO_ADMIN_PASSWORD=mi_contraseña_admin_odoo`
-* `ODOO_PORT=8069`
+## Prerequisitos
 
-Estas variables son cruciales para la configuración de la conexión a la base de datos PostgreSQL y la configuración de la instancia de Odoo.
+| Nombre                  | Descripción                                     | Versión   |
+| ----------------------- | ----------------------------------------------- | --------- |
+| Python                  | Para ejecutar el script de transformación       | `>=3`     |
+| Docker / Docker Compose | Para levantar Odoo y PostgreSQL en contenedores | `v23.0.1` |
+| Odoo 16                 | ERP donde se integra el módulo                  | `v16`     |
 
-#   Instalación y Dependencias
+## ¿Cómo iniciar?
 
-1.  **Instalación de Docker y Docker Compose:** (No se especifica en el documento, pero es esencial para el entorno descrito)
-    * Descargar e instalar Docker Desktop (para Windows y macOS) o Docker Engine y Docker Compose (para Linux) desde la página oficial de Docker.
-2.  **Instalación de Python 3:** (Asumido como requisito previo)
-    * Asegurarse de tener Python 3 instalado en el sistema.
-3.  **Creación de un Entorno Virtual (Recomendado):**
-    * Crear un entorno virtual para el proyecto Python para aislar las dependencias:
+1. Clona el repositorio:
 
-        ```bash
-        python3 -m venv venv
-        source venv/bin/activate # En Linux/macOS
-        venv\Scripts\activate # En Windows
-        ```
+   > https://github.com/yornipaz/medio-odoo
 
-4.  **Instalación de Dependencias de Python:**
-    * Utilizar el archivo `requirements.txt` para instalar las librerías necesarias:
+2. Crea y activa un entorno virtual:
 
-        ```bash
-        pip install -r requirements.txt
-        ```
-    * (Asumiendo que `requirements.txt` contiene: `pandas`, `numpy`, `json`)
-5.  **Instalación y Configuración de Odoo 16:**
-    * Si se opta por la instalación manual (alternativa a Docker), descargar Odoo 16 desde el enlace proporcionado en el documento. [cite: 25]
-    * Configurar Odoo para conectarse a la base de datos PostgreSQL utilizando las variables de entorno.
-6.  **Configuración de PostgreSQL:**
-    * Asegurarse de que PostgreSQL esté instalado y configurado, ya sea directamente o a través de Docker.
-    * Crear la base de datos y el usuario con los permisos adecuados para que Odoo pueda acceder a ella.
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
 
-#   Consideraciones Adicionales
+   ```
 
-* **URLs y Documentación:** Es importante documentar claramente las URLs de acceso a Odoo, las rutas de los archivos, y cualquier otra información relevante para la configuración y el uso de la aplicación.
-* **Manejo de Errores:** Implementar un manejo robusto de errores tanto en el script de Python como en el módulo de Odoo para asegurar la estabilidad y la facilidad de depuración. 
-* **Seguridad:** Considerar las implicaciones de seguridad, especialmente en el manejo de las contraseñas y la conexión a la base de datos.
-* **Escalabilidad:** Diseñar la solución teniendo en cuenta la posible escalabilidad futura, especialmente si se prevé un aumento en el volumen de datos o el número de usuarios.
+3. Instala dependencias:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Ejecuta el script:
+
+   ```bash
+   python medio.py <ruta_del_excel> <ruta_del_txt>
+   ```
+
+5. Para trabajar con la interfaz Odoo, continúa con la sección de contenedores.
+
+## Trabajando con contenedores
+
+### Dockerizado
+
+El proyecto se ejecuta con Docker Compose. Se incluyen dos servicios:
+
+- **db**: Contenedor de PostgreSQL
+- **odoo**: Contenedor con Odoo 16 y módulo personalizado
+
+### Docker Compose
+
+1.  Crea un archivo .env a partir de .env.example y configura las siguientes variables:
+
+    ```bash
+    POSTGRES_DB=postgres
+    POSTGRES_PASSWORD=odoo16
+    POSTGRES_USER=odoo16
+    PGDATA=/var/lib/pgsql/data/pgdata
+
+    HOST=postgres
+    USER=odoo16
+    PASSWORD=odoo16
+
+    ```
+
+2.  Levanta los contenedores:
+
+    ```bash
+        docker compose up --build
+
+    ```
+
+3.  Accede a Odoo en `http://localhost:8069`.
+
+4.  Instala el módulo desde Apps.
+
+## Variables de entorno
+
+Estas variables son utilizadas en los contenedores y deben estar definidas en un archivo .env en la raíz del proyecto:
+
+```bash
+POSTGRES_DB=XXXXX
+POSTGRES_PASSWORD=XXXXXX
+POSTGRES_USER=XXXXXXXX
+PGDATA=/var/lib/pgsql/data/pgdata
+HOST=XXXXXX
+USER=XXXXXXX
+PASSWORD=XXXXX
+```
+
+## Sistema de archivos
+
+Estructura del proyecto:
+
+- `/medio.py`: Script que transforma el archivo Excel.
+
+- `/requirements.txt`: Dependencias de Python .
+
+- `/custom-addons/`: Carpeta donde se encuentra el módulo personalizado de Odoo.
+
+- `/docker-compose.yml`: Archivo para levantar el entorno con Docker.
+
+- `/config/`: Archivos de configuración de Odoo.
+
+- `/README.md`: Documentación del proyecto.

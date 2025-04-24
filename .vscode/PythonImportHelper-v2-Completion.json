@@ -250,7 +250,7 @@
         "kind": 2,
         "importPath": "medio",
         "description": "medio",
-        "peekOfCode": "def leer_excel(url):\n    \"\"\"\n    Lee el archivo Excel desde la URL proporcionada.\n    Args:\n        url (str): URL del archivo Excel.\n    Returns:\n        pandas.DataFrame: DataFrame con los datos del Excel.\n    \"\"\"\n    try:\n        df = pd.read_excel(url, engine='openpyxl')",
+        "peekOfCode": "def leer_excel(url):\n    \"\"\"\n    Lee el archivo Excel desde la URL proporcionada.\n    Args:\n        url (str): URL del archivo Excel.\n    Returns:\n        pandas.DataFrame: DataFrame con los datos del Excel.\n    \"\"\"\n    try:\n        df = pd.read_excel(url, engine=\"openpyxl\")",
         "detail": "medio",
         "documentation": {}
     },
@@ -259,7 +259,7 @@
         "kind": 2,
         "importPath": "medio",
         "description": "medio",
-        "peekOfCode": "def generar_txt(df, ruta):\n    \"\"\"\n    Genera un archivo de texto a partir de un DataFrame.\n    Args:\n        df (pandas.DataFrame): DataFrame a convertir.\n        ruta (str): Ruta donde se guardará el archivo de texto.\n    \"\"\"\n    df_string = df.to_string(index=False, header=False)\n    df_string = df_string.replace(' ', '')\n    df_string = df_string.replace('\\n', ' ')",
+        "peekOfCode": "def generar_txt(df, ruta):\n    \"\"\"\n    Genera un archivo de texto a partir de un DataFrame.\n    Args:\n        df (pandas.DataFrame): DataFrame a convertir.\n        ruta (str): Ruta donde se guardará el archivo de texto.\n    \"\"\"\n    df_string = df.to_string(index=False, header=False)\n    df_string = df_string.replace(\" \", \"\")\n    df_string = df_string.replace(\"\\n\", \" \")",
         "detail": "medio",
         "documentation": {}
     },

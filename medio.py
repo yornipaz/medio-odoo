@@ -14,7 +14,7 @@ def leer_excel(url):
         pandas.DataFrame: DataFrame con los datos del Excel.
     """
     try:
-        df = pd.read_excel(url, engine='openpyxl')
+        df = pd.read_excel(url, engine="openpyxl")
         return df
     except Exception as e:
         print(f"Error al leer el archivo Excel: {e}")
@@ -31,13 +31,15 @@ def generar_txt(df, ruta):
     """
 
     df_string = df.to_string(index=False, header=False)
-    df_string = df_string.replace(' ', '')
-    df_string = df_string.replace('\n', ' ')
-    df_string = df_string.replace('\xa0', ' ')  # Para manejar caracteres de espacio no separables
+    df_string = df_string.replace(" ", "")
+    df_string = df_string.replace("\n", " ")
+    df_string = df_string.replace(
+        "\xa0", " "
+    )  # Para manejar caracteres de espacio no separables
     print("\nDataFrame transformado:")
     print(df_string)
 
-    with open(ruta, 'w') as f:
+    with open(ruta, "w") as f:
         f.write(df_string)
 
     print(f"Archivo .txt generado exitosamente en: {ruta}")
@@ -45,11 +47,11 @@ def generar_txt(df, ruta):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Uso: python main.py <ruta_del_excel> <ruta_del_txt>")
+        print("Uso: python medio.py <ruta_del_excel> <ruta_del_txt>")
     else:
         excel_path = sys.argv[1]
         txt_path = sys.argv[2]
-        reglas_path = 'data/reglas.json'
+        reglas_path = "data/reglas.json"
         reglas = leer_json(reglas_path)
         if reglas is None:
             print("Error al cargar las reglas.")
@@ -60,8 +62,7 @@ if __name__ == "__main__":
             if df is not None:
                 factory = TransformacionFactory()
                 columnas_a_transformar = ["ANIO", "CONCEPTO", "VALOR"]
-                transformer = ExcelTransformer(
-                    reglas, factory, columnas_a_transformar)
+                transformer = ExcelTransformer(reglas, factory, columnas_a_transformar)
                 df_transformado = transformer.transformar_dataframe(df.copy())
                 if df_transformado is not None:
                     generar_txt(df_transformado, txt_path)
@@ -71,6 +72,5 @@ if __name__ == "__main__":
             else:
                 sys.exit(1)
         except Exception as e:
-            print(
-                f"Error durante la transformación o generación del archivo: {e}")
+            print(f"Error durante la transformación o generación del archivo: {e}")
             sys.exit(1)
