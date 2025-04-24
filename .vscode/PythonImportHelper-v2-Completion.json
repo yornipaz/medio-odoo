@@ -1,0 +1,329 @@
+[
+    {
+        "label": "models",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "fields",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "api",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "UserError",
+        "importPath": "odoo.exceptions",
+        "description": "odoo.exceptions",
+        "isExtraImport": true,
+        "detail": "odoo.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "io",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "io",
+        "description": "io",
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionFactory",
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "isExtraImport": true,
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "ExcelTransformer",
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "isExtraImport": true,
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "leer_json",
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "isExtraImport": true,
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "Transformacion",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class Transformacion(ABC):\n    @abstractmethod\n    def transformar(self, df, columna_nombre, regla):\n        pass\nclass TransformacionAnio(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                df[columna_nombre] = (\n                    df[columna_nombre]",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionAnio",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class TransformacionAnio(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                df[columna_nombre] = (\n                    df[columna_nombre]\n                    .astype(int)\n                    .astype(str)\n                    .str.zfill(regla[\"TAMANO\"])\n                )",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionConcepto",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class TransformacionConcepto(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            df[columna_nombre] = (\n                df[columna_nombre]\n                .astype(str)\n                .str[: regla[\"TAMANO\"]]\n                .str.ljust(regla[\"TAMANO\"], \"$\")\n            )\n        return df",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionValor",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class TransformacionValor(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                if pd.isna(df[columna_nombre]).any():\n                    df[columna_nombre] = df[columna_nombre].replace(np.nan, \"\")\n                df[columna_nombre] = (\n                    df[columna_nombre]\n                    .astype(int)\n                    .astype(str)",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionFactory",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class TransformacionFactory:\n    def crear_transformacion(self, nombre_columna):\n        if nombre_columna == \"ANIO\":\n            return TransformacionAnio()\n        elif nombre_columna == \"CONCEPTO\":\n            return TransformacionConcepto()\n        elif nombre_columna == \"VALOR\":\n            return TransformacionValor()\n        else:\n            raise ValueError(f\"Tipo de transformación desconocido: {nombre_columna}\")",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "ExcelTransformer",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class ExcelTransformer:\n    def __init__(\n        self,\n        reglas: List[dict],\n        transformacion_factory: TransformacionFactory,\n        columnas_a_transformar: Optional[List[str]] = None,\n    ):\n        self.reglas = reglas\n        self.transformacion_factory = transformacion_factory\n        self.columnas_a_transformar = (",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "MedioExcelToTxt",
+        "kind": 6,
+        "importPath": "custom-addons.medio.models.excel_to_txt",
+        "description": "custom-addons.medio.models.excel_to_txt",
+        "peekOfCode": "class MedioExcelToTxt(models.TransientModel):\n    _name = \"medio.excel_to_txt\"\n    _description = \"Wizard to Convert Excel to TXT\"\n    excel_file = fields.Binary(string=\"Archivo Excel\", required=True)\n    excel_filename = fields.Char(string=\"Nombre del Archivo Excel\")\n    txt_file = fields.Binary(string=\"Archivo TXT\", readonly=True)\n    txt_filename = fields.Char(string=\"Nombre del Archivo TXT\", readonly=True)\n    def _get_reglas_path(self):\n        \"\"\"Devuelve la ruta absoluta al archivo de reglas JSON.\"\"\"\n        return os.path.join(",
+        "detail": "custom-addons.medio.models.excel_to_txt",
+        "documentation": {}
+    },
+    {
+        "label": "leer_excel",
+        "kind": 2,
+        "importPath": "medio",
+        "description": "medio",
+        "peekOfCode": "def leer_excel(url):\n    \"\"\"\n    Lee el archivo Excel desde la URL proporcionada.\n    Args:\n        url (str): URL del archivo Excel.\n    Returns:\n        pandas.DataFrame: DataFrame con los datos del Excel.\n    \"\"\"\n    try:\n        df = pd.read_excel(url, engine='openpyxl')",
+        "detail": "medio",
+        "documentation": {}
+    },
+    {
+        "label": "generar_txt",
+        "kind": 2,
+        "importPath": "medio",
+        "description": "medio",
+        "peekOfCode": "def generar_txt(df, ruta):\n    \"\"\"\n    Genera un archivo de texto a partir de un DataFrame.\n    Args:\n        df (pandas.DataFrame): DataFrame a convertir.\n        ruta (str): Ruta donde se guardará el archivo de texto.\n    \"\"\"\n    df_string = df.to_string(index=False, header=False)\n    df_string = df_string.replace(' ', '')\n    df_string = df_string.replace('\\n', ' ')",
+        "detail": "medio",
+        "documentation": {}
+    },
+    {
+        "label": "Transformacion",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class Transformacion(ABC):\n    @abstractmethod\n    def transformar(self, df, columna_nombre, regla):\n        pass\nclass TransformacionAnio(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                df[columna_nombre] = df[columna_nombre].astype(\n                    int).astype(str).str.zfill(regla[\"TAMANO\"])",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionAnio",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class TransformacionAnio(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                df[columna_nombre] = df[columna_nombre].astype(\n                    int).astype(str).str.zfill(regla[\"TAMANO\"])\n            except (ValueError, TypeError):\n                return None\n        return df\nclass TransformacionConcepto(Transformacion):",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionConcepto",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class TransformacionConcepto(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            df[columna_nombre] = df[columna_nombre].astype(str).str[:regla[\"TAMANO\"]].str.ljust(regla[\"TAMANO\"], '$')\n        return df\nclass TransformacionValor(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                if pd.isna(df[columna_nombre]).any():",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionValor",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class TransformacionValor(Transformacion):\n    def transformar(self, df, columna_nombre, regla):\n        if columna_nombre in df.columns:\n            try:\n                if pd.isna(df[columna_nombre]).any():\n                    df[columna_nombre] = df[columna_nombre].replace(np.nan, '')\n                df[columna_nombre] = df[columna_nombre].astype(\n                    int).astype(str).str.zfill(regla[\"TAMANO\"])\n            except (ValueError, TypeError):\n                return None",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "TransformacionFactory",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class TransformacionFactory:\n    def crear_transformacion(self, nombre_columna):\n        if nombre_columna == \"ANIO\":\n            return TransformacionAnio()\n        elif nombre_columna == \"CONCEPTO\":\n            return TransformacionConcepto()\n        elif nombre_columna == \"VALOR\":\n            return TransformacionValor()\n        else:\n            raise ValueError(",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "ExcelTransformer",
+        "kind": 6,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "class ExcelTransformer:\n    def __init__(self, reglas: List[dict], transformacion_factory: TransformacionFactory, columnas_a_transformar: Optional[List[str]] = None):\n        self.reglas = reglas\n        self.transformacion_factory = transformacion_factory\n        self.columnas_a_transformar = columnas_a_transformar if columnas_a_transformar else [\n            regla[\"nombre\"] for regla in self.reglas]\n    def transformar_dataframe(self, df: pd.DataFrame) -> Optional[pd.DataFrame]:\n        df_transformado = df[self.columnas_a_transformar].copy()\n        for regla in self.reglas:\n            nombre_columna = regla[\"nombre\"]",
+        "detail": "transformaciones",
+        "documentation": {}
+    },
+    {
+        "label": "leer_json",
+        "kind": 2,
+        "importPath": "transformaciones",
+        "description": "transformaciones",
+        "peekOfCode": "def leer_json(url):\n    \"\"\"\n    Lee el archivo JSON desde la URL proporcionada.\n    Args:\n        url (str): URL del archivo JSON.\n    Returns:\n        dict: Diccionario con los datos del JSON.\n    \"\"\"\n    try:\n        with open(url, 'r') as file:",
+        "detail": "transformaciones",
+        "documentation": {}
+    }
+]
