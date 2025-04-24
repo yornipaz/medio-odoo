@@ -19,7 +19,7 @@ El objetivo final es optimizar el flujo de trabajo, reducir errores manuales y a
     * `json`: Para trabajar con datos en formato JSON (aunque no se especifica un uso extensivo de JSON en el documento, podría ser útil para la configuración o el manejo de reglas). [cite: 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     * `numpy`: Para operaciones numéricas eficientes, especialmente si se requiere un manejo avanzado de los datos en la columna "VALOR".
     * `abc`: Para trabajar con clases abstractas (su uso específico dependerá del diseño del script, pero podría utilizarse para definir una interfaz para los transformadores de datos).
-* **ERP:** Odoo 16 es el sistema de planificación de recursos empresariales (ERP) donde se integra la funcionalidad. [cite: 19, 20, 21, 22, 23]
+* **ERP:** Odoo 16 es el sistema de planificación de recursos empresariales (ERP) donde se integra la funcionalidad. 
 
 #   Entorno y Configuración
 
