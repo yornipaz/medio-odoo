@@ -149,7 +149,7 @@ class MedioExcelToTxt(models.TransientModel):
 
             reglas = self._get_reglas()
             factory = TransformacionFactory()
-            # Las columnas a transformar se obtienen dinámicamente de las reglas
+
             columnas_a_transformar = [regla["nombre"] for regla in reglas]
             transformer = ExcelTransformer(reglas, factory, columnas_a_transformar)
             df_transformado = transformer.transformar_dataframe(df.copy())
@@ -158,9 +158,7 @@ class MedioExcelToTxt(models.TransientModel):
                 txt_content = df_transformado.to_string(index=False, header=False)
                 txt_content = txt_content.replace(" ", "")
                 txt_content = txt_content.replace("\n", " ")
-                txt_content = txt_content.replace(
-                    "\xa0", " "
-                )  # Handle non-breaking spaces
+                txt_content = txt_content.replace("\xa0", " ")
 
                 self.txt_file = base64.b64encode(txt_content.encode("utf-8"))
                 self.txt_filename = "transformado.txt"
