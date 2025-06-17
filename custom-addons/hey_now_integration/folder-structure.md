@@ -1,0 +1,31 @@
+```
+└── 📁hey_now_integration
+    └── 📁controllers
+        └── __init__.py
+        └── webhook.py
+    └── 📁models
+        └── __init__.py
+        └── mail_channel.py
+        └── mail_message.py
+        └── 📁payloads
+            └── __init__.py
+            └── base_event.py
+            └── dispatcher.py
+            └── heynow.py
+        └── 📁provider
+            └── __init__.py
+            └── dispatcher.py
+            └── heynow.py
+            └── provider_type.py
+            └── provider.py
+        └── res_config_settings.py
+        └── res_partner.py
+    └── 📁static
+        └── 📁description
+            └── icon.png
+    └── 📁views
+        └── provider_config_settings_views.xml
+        └── res_partner_views.xml
+    └── __init__.py
+    └── __manifest__.py
+```

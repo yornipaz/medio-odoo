@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="res_config_settings_view_provider_config_settings" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.provider</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+    <field name="arch" type="xml">
+      <xpath expr="//div[hasclass('settings')]" position="inside">
+        <div class="app_settings_block"
+          data-string="Provider Chat Integration"
+          string="Provider Chat Integration"
+          data-key="provider_chat_integration"
+          web_icon="provider_chat_integration/static/description/icon.png">
+          <h2>Provider Chat Integration</h2>
+
+          <div class="col-xs-12 row o_settings_container">
+            <!-- Provider Chat URL -->
+            <div class="col-xs-12 col-md-6 o_setting_box">
+              <div class="o_setting_right_pane">
+                <div class="content-group">
+                  <div class="row mt8">
+                    <label class="col-lg-4" for="provider_base_url"
+                      string="Provider Base URL" />
+                    <field name="provider_base_url"
+                      placeholder="Your Provider Base URL" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Provider
+            Chat Name-->
+            <div class="col-xs-12 col-md-6 o_setting_box">
+              <div class="o_setting_right_pane">
+                <div class="content-group">
+                  <div class="row mt8">
+                    <label class="col-lg-4" for="provider_name"
+                      string="Provider Name" />
+                    <field name="provider_name"
+                      placeholder="Your Provider Name" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Provider Chat Token -->
+            <div class="col-xs-12 col-md-6 o_setting_box">
+              <div class="o_setting_right_pane">
+                <div class="content-group">
+                  <div class="row mt8">
+                    <label class="col-lg-4" for="provider_token"
+                      string="Provider Chat Token" />
+                    <field name="provider_token"
+                      placeholder="Provider Chat Token" password='True' />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,13 @@
+<odoo>
+  <record id="view_partner_form_provider" model="ir.ui.view">
+    <field name="name">res.partner.form.provider</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/group" position="inside">
+        <field name="provider_user_id"/>
+        <field name="provider_name"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>
