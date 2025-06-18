@@ -1,65 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-  <record id="res_config_settings_view_provider_config_settings" model="ir.ui.view">
-    <field name="name">res.config.settings.view.form.inherit.provider</field>
-    <field name="model">res.config.settings</field>
-    <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
-    <field name="arch" type="xml">
-      <xpath expr="//div[hasclass('settings')]" position="inside">
-        <div class="app_settings_block"
-          data-string="Provider Chat Integration"
-          string="Provider Chat Integration"
-          data-key="provider_chat_integration"
-          web_icon="provider_chat_integration/static/description/icon.png">
-          <h2>Provider Chat Integration</h2>
+  <data>
+    <record id="res_config_settings_view_chat_provider_config" model="ir.ui.view">
+      <field name="name">res.config.settings.view.form.inherit.chat.providers</field>
+      <field name="model">res.config.settings</field>
+      <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+      <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
 
-          <div class="col-xs-12 row o_settings_container">
-            <!-- Provider Chat URL -->
-            <div class="col-xs-12 col-md-6 o_setting_box">
-              <div class="o_setting_right_pane">
-                <div class="content-group">
-                  <div class="row mt8">
-                    <label class="col-lg-4" for="provider_base_url"
-                      string="Provider Base URL" />
-                    <field name="provider_base_url"
-                      placeholder="Your Provider Base URL" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--Provider
-            Chat Name-->
-            <div class="col-xs-12 col-md-6 o_setting_box">
-              <div class="o_setting_right_pane">
-                <div class="content-group">
-                  <div class="row mt8">
-                    <label class="col-lg-4" for="provider_name"
-                      string="Provider Name" />
-                    <field name="provider_name"
-                      placeholder="Your Provider Name" />
-                  </div>
+          <div class="app_settings_block"
+            data-string="Chat Omnicanal"
+            string="Chat Omnicanal"
+            data-key="chat_omnicanal"
+            web_icon="hey_now_integration/static/description/icon.png">
+
+            <h2>Configuración de Proveedores de Chat</h2>
+
+            <!-- Campo Many2many con widget de tags -->
+            <div class="row mt16 o_settings_container">
+              <div class="col-12 col-lg-6 o_setting_box">
+                <div class="o_setting_left_pane">
+                  <field name="chat_provider_ids" widget="many2many_tags"
+                    options="{'color_field': 'provider_type', 'no_create': True}"
+                    placeholder="Selecciona proveedores..." />
                 </div>
               </div>
             </div>
 
+            <!-- Botón para gestionar proveedores -->
+            <div class="col-12 mt-3">
+              <button name="%(action_chat_provider)d" type="action" class="btn btn-primary"
+                string="Gestionar Proveedores" icon="fa-cog" />
+            </div>
 
-            <!-- Provider Chat Token -->
-            <div class="col-xs-12 col-md-6 o_setting_box">
-              <div class="o_setting_right_pane">
-                <div class="content-group">
-                  <div class="row mt8">
-                    <label class="col-lg-4" for="provider_token"
-                      string="Provider Chat Token" />
-                    <field name="provider_token"
-                      placeholder="Provider Chat Token" password='True' />
-                  </div>
-                </div>
+            <!-- Información adicional -->
+            <div class="col-12 mt-2">
+              <div class="text-muted">
+                <small>
+                  <i class="fa fa-info-circle" /> Configura y gestiona los diferentes proveedores de
+                  chat para tu sistema omnicanal. </small>
               </div>
             </div>
 
           </div>
-        </div>
-      </xpath>
-    </field>
-  </record>
+        </xpath>
+      </field>
+    </record>
+  </data>
 </odoo>

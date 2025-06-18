@@ -4,49 +4,47 @@ from odoo import models, fields, api
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    provider_base_url = fields.Char(
-        string="Provider Base  URL",
-        config_parameter="provider.base_url",
-        help="URL base de tu proveedor de chat (ejemplo: https://api.botpress.com)",
-        
+    # OPCIÓN 1: Campo Many2many simple (recomendado)
+    chat_provider_ids = fields.Many2many(
+        "chat.provider",
+        string="Proveedores de Chat Configurados",
+        help="Selecciona los proveedores de chat que deseas configurar",
     )
 
-    provider_token = fields.Char(
-        string="provider chat Token",
-        config_parameter="provider.token",
-        help="Token de autenticación para el proveedor de chat",
-        password=True,  # Para ocultar el token en la interfaz
-    )
-    provider_name = fields.Char(
-        string="Nombre del Proveedor",
-        config_parameter="provider.name",
-        help="Nombre del proveedor de chat",
-    )
+    # OPCIÓN 2: Si necesitas mostrar TODOS los proveedores existentes
+    # chat_provider_ids = fields.Many2many(
+    #     "chat.provider",
+    #     string="Proveedores de Chat Configurados",
+    #     compute="_compute_chat_providers",
+    #     inverse="_inverse_chat_providers",
+    #     store=False,
+    # )
 
-    def set_values(self):
-        super().set_values()
-        self.env["ir.config_parameter"].sudo().set_param(
-            "provider.base_url", self.provider_base_url
-        )
-        self.env["ir.config_parameter"].sudo().set_param(
-            "provider.token", self.provider_token
-        )
-        self.env["ir.config_parameter"].sudo().set_param(
-            "provider.name", self.provider_name
-        )
+    # def _compute_chat_providers(self):
+    #     """Obtiene todos los proveedores de chat existentes"""
+    #     for record in self:
+    #         providers = self.env["chat.provider"].search([])
+    #         record.chat_provider_ids = providers
 
+    # def _inverse_chat_providers(self):
+    #     """Método inverso para manejar cambios en el campo computado"""
+    #     # Aquí puedes manejar la lógica cuando se modifiquen los proveedores
+    #     pass
+
+    # Método para obtener proveedores activos
     @api.model
-    def get_values(self):
-        res = super().get_values()
-        res.update(
-            provider_base_url=self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("provider.base_url"),
-            provider_token=self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("provider.token"),
-            provider_name=self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("provider.name"),
-        )
-        return res
+    def get_active_providers(self):
+        """Retorna los proveedores activos"""
+        return self.env["chat.provider"].search([("is_active", "=", True)])
+
+    # Método para crear un nuevo proveedor desde configuración
+    def create_new_provider(self):
+        """Abre el formulario para crear un nuevo proveedor"""
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Nuevo Proveedor de Chat",
+            "res_model": "chat.provider",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_is_active": True},
+        }

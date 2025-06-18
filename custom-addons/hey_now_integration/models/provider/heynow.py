@@ -1,5 +1,6 @@
 from .provider import Provider
 from typing import Dict, Any
+from .chat_provider_config import ChatProviderConfig
 
 
 class HeynowProvider(Provider):
@@ -14,6 +15,8 @@ class HeynowProvider(Provider):
         :param env: Odoo environment object
         """
         self.env = env
+        self._provider_config = None
+        self._provider_name = "heynow"
 
     def get_url(self, config=None) -> str:
         """
@@ -67,7 +70,7 @@ class HeynowProvider(Provider):
 
         payload = {
             "text": message_text,
-            "partnerUser": {"id": 49, "names": "Alejandro", "lastNames": "Marin"},
+            "partnerUser": self._get_partner_user(),
             "idMessageHey": message.message_id_provider_chat,
         }
         if message.attachment_ids:
@@ -82,17 +85,45 @@ class HeynowProvider(Provider):
         return payload
 
     def _get_auth_token(self) -> str:
+        token = ""
+        try:
+            self._provider_config = self._get_provider_config()
+            token = self._provider_config.auth_token
+        except Exception as e:
+            self.env["ir.logging"].sudo().create(
+                {
+                    "name": "HeynowProvider",
+                    "type": "server",
+                    "dbname": self.env.cr.dbname,
+                    "level": "ERROR",
+                    "message": f"Error retrieving auth token: {str(e)}",
+                    "path": __file__,
+                    "func": "_get_auth_token",
+                    "line": "",
+                }
+            )
 
-        return self.env["ir.config_parameter"].sudo().get_param("provider.token")
+        return token
 
     def _get_base_url(self) -> str:
 
-        return self.env["ir.config_parameter"].sudo().get_param("provider.base_url")
+        if not self._provider_config:
+            self._provider_config = self._get_provider_config()
 
-    def _get_patner_user(self) -> Dict[str, Any]:
+        if self._provider_config.base_url:
+            return self._provider_config.base_url
+
+        return ""
+
+    def _get_partner_user(self) -> Dict[str, Any]:
         # logica para obtener el para el partner user de hey now
+        if not self._provider_config:
+            self._provider_config = self._get_provider_config()
 
-        return {"id": 49, "names": "Alejandro", "lastNames": "Marin"}
+        if self._provider_config.config_extra:
+            return self._provider_config.config_extra.get("partnerUser", {})
+
+        return {}
 
     def _clean_html(self, body) -> str:
         """
@@ -124,3 +155,26 @@ class HeynowProvider(Provider):
 
         # Limpiar múltiples espacios
         return " ".join(text.split())
+
+    def _get_provider_config(self) -> ChatProviderConfig:
+        """
+        Retrieve the provider configuration from the Odoo environment.
+
+        :return: The provider configuration object.
+        """
+
+        provider = self.env["chat.provider"].search(
+            [("provider_type", "=", self.provider_name)], limit=1
+        )
+        if not provider:
+            raise ValueError(f"Provider not found: heynow")
+        return ChatProviderConfig(
+            id=provider.id,
+            name=provider.name,
+            provider_type=provider.provider_type,
+            is_active=provider.is_active,
+            base_url=provider.base_url,
+            auth_token=provider.auth_token,
+            allowed_channel_ids=provider.allowed_channel_ids,
+            config_extra=provider.get_config_extra_dict(),
+        )

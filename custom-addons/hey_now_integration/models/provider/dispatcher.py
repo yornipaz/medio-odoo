@@ -1,6 +1,7 @@
 from .provider import Provider
 from .heynow import HeynowProvider
 from .provider_type import ProviderType
+from .chat_provider_config import ChatProviderConfig
 
 
 class ProviderDispatcher:

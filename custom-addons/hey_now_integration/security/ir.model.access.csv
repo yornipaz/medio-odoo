@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_chat_provider_admin,chat.provider.admin,model_chat_provider,base.group_system,1,1,1,1
+access_chat_provider_user,chat.provider.user,model_chat_provider,base.group_user,1,1,1,0
+access_chat_channel_type_admin,chat.channel.type.admin,model_chat_channel_type,base.group_system,1,1,1,1
+access_chat_channel_type_user,chat.channel.type.user,model_chat_channel_type,base.group_user,1,0,0,0

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="channel_whatsapp" model="chat.channel.type">
+            <field name="name">WhatsApp</field>
+            <field name="code">whatsapp</field>
+        </record>
+        <record id="channel_messenger" model="chat.channel.type">
+            <field name="name">Messenger</field>
+            <field name="code">messenger</field>
+        </record>
+        <record id="channel_instagram" model="chat.channel.type">
+            <field name="name">Instagram</field>
+            <field name="code">instagram</field>
+        </record>
+        <record id="channel_telegram" model="chat.channel.type">
+            <field name="name">Telegram</field>
+            <field name="code">telegram</field>
+        </record>
+    </data>
+</odoo>

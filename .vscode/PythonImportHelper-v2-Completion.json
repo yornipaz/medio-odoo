@@ -41,6 +41,70 @@
         "documentation": {}
     },
     {
+        "label": "_",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "fields",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "api",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "_",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "fields",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
+        "label": "api",
+        "importPath": "odoo",
+        "description": "odoo",
+        "isExtraImport": true,
+        "detail": "odoo",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "odoo",
         "description": "odoo",
@@ -515,6 +579,14 @@
         "documentation": {}
     },
     {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
         "label": "typing",
         "kind": 6,
         "isExtraImport": true,
@@ -565,6 +637,38 @@
     },
     {
         "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -838,12 +942,28 @@
         "documentation": {}
     },
     {
-        "label": "requests",
+        "label": "base64",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "requests",
-        "description": "requests",
-        "detail": "requests",
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "Fernet",
+        "importPath": "cryptography.fernet",
+        "description": "cryptography.fernet",
+        "isExtraImport": true,
+        "detail": "cryptography.fernet",
+        "documentation": {}
+    },
+    {
+        "label": "ValidationError",
+        "importPath": "odoo.exceptions",
+        "description": "odoo.exceptions",
+        "isExtraImport": true,
+        "detail": "odoo.exceptions",
         "documentation": {}
     },
     {
@@ -863,12 +983,12 @@
         "documentation": {}
     },
     {
-        "label": "base64",
+        "label": "requests",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "base64",
-        "description": "base64",
-        "detail": "base64",
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
         "documentation": {}
     },
     {
@@ -1624,6 +1744,15 @@
         "documentation": {}
     },
     {
+        "label": "ChatProviderConfig",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.provider.chat_provider_config",
+        "description": "custom-addons.hey_now_integration.models.provider.chat_provider_config",
+        "peekOfCode": "class ChatProviderConfig:\n    id: int\n    name: str\n    provider_type: str\n    is_active: bool\n    base_url: str\n    allowed_channel_ids: List[Dict[str, Any]]  # Campo obligatorio\n    auth_token: str = \"\"  # Campo con valor por defecto\n    config_extra: Optional[Dict[str, Any]] = None  # Opcional",
+        "detail": "custom-addons.hey_now_integration.models.provider.chat_provider_config",
+        "documentation": {}
+    },
+    {
         "label": "ProviderDispatcher",
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.provider.dispatcher",
@@ -1660,6 +1789,24 @@
         "documentation": {}
     },
     {
+        "label": "ChatChannelType",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.chat_channel_type",
+        "description": "custom-addons.hey_now_integration.models.chat_channel_type",
+        "peekOfCode": "class ChatChannelType(models.Model):\n    _name = \"chat.channel.type\"\n    _description = \"Tipo de Canal\"\n    name = fields.Char(string=\"Nombre del Canal\", required=True)\n    code = fields.Char(\n        string=\"Código\", required=True, help=\"Ej: whatsapp, telegram, etc.\"\n    )\n    active = fields.Boolean(string=\"Activo\", default=True)",
+        "detail": "custom-addons.hey_now_integration.models.chat_channel_type",
+        "documentation": {}
+    },
+    {
+        "label": "ChatProvider",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.chat_provider",
+        "description": "custom-addons.hey_now_integration.models.chat_provider",
+        "peekOfCode": "class ChatProvider(models.Model):\n    _name = \"chat.provider\"\n    _description = \"Configuración de Proveedor de Chat\"\n    _order = \"provider_type\"\n    name = fields.Char(\n        string=\"Nombre visible\", required=True, help=\"Nombre del proveedor\"\n    )\n    provider_type = fields.Selection(\n        [\n            (\"heynow\", \"HeyNow\"),",
+        "detail": "custom-addons.hey_now_integration.models.chat_provider",
+        "documentation": {}
+    },
+    {
         "label": "MailChannel",
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.mail_channel",
@@ -1691,7 +1838,7 @@
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.res_config_settings",
         "description": "custom-addons.hey_now_integration.models.res_config_settings",
-        "peekOfCode": "class ResConfigSettings(models.TransientModel):\n    _inherit = \"res.config.settings\"\n    provider_base_url = fields.Char(\n        string=\"Provider Base  URL\",\n        config_parameter=\"provider.base_url\",\n        help=\"URL base de tu proveedor de chat (ejemplo: https://api.botpress.com)\",\n    )\n    provider_token = fields.Char(\n        string=\"provider chat Token\",\n        config_parameter=\"provider.token\",",
+        "peekOfCode": "class ResConfigSettings(models.TransientModel):\n    _inherit = \"res.config.settings\"\n    # OPCIÓN 1: Campo Many2many simple (recomendado)\n    chat_provider_ids = fields.Many2many(\n        \"chat.provider\",\n        string=\"Proveedores de Chat Configurados\",\n        help=\"Selecciona los proveedores de chat que deseas configurar\",\n    )\n    # OPCIÓN 2: Si necesitas mostrar TODOS los proveedores existentes\n    # chat_provider_ids = fields.Many2many(",
         "detail": "custom-addons.hey_now_integration.models.res_config_settings",
         "documentation": {}
     },
