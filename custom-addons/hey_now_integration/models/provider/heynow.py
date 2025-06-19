@@ -1,3 +1,4 @@
+from .provider_type import ProviderType
 from .provider import Provider
 from typing import Dict, Any
 from .chat_provider_config import ChatProviderConfig
@@ -16,7 +17,7 @@ class HeynowProvider(Provider):
         """
         self.env = env
         self._provider_config = None
-        self._provider_name = "heynow"
+        self._provider_name = ProviderType.HEYNOW.value
 
     def get_url(self, config=None) -> str:
         """
@@ -87,7 +88,7 @@ class HeynowProvider(Provider):
     def _get_auth_token(self) -> str:
         token = ""
         try:
-            self._provider_config = self._get_provider_config()
+            self._provider_config = self.get_provider_config()
             token = self._provider_config.auth_token
         except Exception as e:
             self.env["ir.logging"].sudo().create(
@@ -108,7 +109,7 @@ class HeynowProvider(Provider):
     def _get_base_url(self) -> str:
 
         if not self._provider_config:
-            self._provider_config = self._get_provider_config()
+            self._provider_config = self.get_provider_config()
 
         if self._provider_config.base_url:
             return self._provider_config.base_url
@@ -118,7 +119,7 @@ class HeynowProvider(Provider):
     def _get_partner_user(self) -> Dict[str, Any]:
         # logica para obtener el para el partner user de hey now
         if not self._provider_config:
-            self._provider_config = self._get_provider_config()
+            self._provider_config = self.get_provider_config()
 
         if self._provider_config.config_extra:
             return self._provider_config.config_extra.get("partnerUser", {})
@@ -126,37 +127,9 @@ class HeynowProvider(Provider):
         return {}
 
     def _clean_html(self, body) -> str:
-        """
-        Convierte el contenido HTML del mail.message.body en texto plano apto para WhatsApp.
-        """
-        from bs4 import BeautifulSoup
-        from markupsafe import Markup
+        return self.clear_html_message(body)
 
-        if isinstance(body, Markup):
-            body = str(body)
-
-        soup = BeautifulSoup(body, "html.parser")
-
-        # Eliminar imágenes (emojis, stickers, etc.)
-        for img in soup.find_all("img"):
-            img.decompose()
-
-        # Eliminar elementos de formato innecesarios
-        for tag in soup(["script", "style"]):
-            tag.decompose()
-
-        # Eliminar spans y elementos vacíos o con datos técnicos
-        for span in soup.find_all("span"):
-            if not span.get_text(strip=True):
-                span.decompose()
-
-        # Convertir a texto plano
-        text = soup.get_text(separator=" ", strip=True)
-
-        # Limpiar múltiples espacios
-        return " ".join(text.split())
-
-    def _get_provider_config(self) -> ChatProviderConfig:
+    def get_provider_config(self) -> ChatProviderConfig:
         """
         Retrieve the provider configuration from the Odoo environment.
 
@@ -164,7 +137,7 @@ class HeynowProvider(Provider):
         """
 
         provider = self.env["chat.provider"].search(
-            [("provider_type", "=", self.provider_name)], limit=1
+            [("provider_type", "=", self._provider_name)], limit=1
         )
         if not provider:
             raise ValueError(f"Provider not found: heynow")

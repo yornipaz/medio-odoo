@@ -88,7 +88,7 @@ class HeynowChannelType(Enum):
             self.SINCH_SMS: "SinchSMS",
             self.DIALOG_360: "360Dialog",
             self.TWILIO: "twilio",
-            self.WHATSAPP_CLOUD: "Whatsapp",
+            self.WHATSAPP_CLOUD: "WhatsApp",
             self.GUPSHUP: "gupshup",
             self.HEY_TEST_CHANNEL: "HeyTestChannel",
             self.T2_VOICE: "T2Voice",

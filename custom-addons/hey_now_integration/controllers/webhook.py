@@ -3,6 +3,10 @@ from odoo.http import request, Response
 import logging
 import json
 
+from ..models.provider.provider_type import ProviderType
+from ..models.payloads.dispatcher import WebhookDispatcher
+from ..models.services.dispatcher import ServiceProviderDispatcher
+
 _logger = logging.getLogger(__name__)
 
 
@@ -25,15 +29,56 @@ class ProviderWebhookController(http.Controller):
                 status=400,
             )
 
-        _logger.info("Received webhook data for provider %s ", data)
-
-        # Validar autenticación del webhook
-        is_valid = self._validate_authentication_by_provider_type(provider_name, data)
-        if not is_valid:
+        payload = None
+        try:
+            dispatcher_webhook = WebhookDispatcher(provider_name, data)
+            payload = dispatcher_webhook.extract_event()
+        except Exception as e:
+            _logger.error("Error extracting event from webhook: %s", str(e))
             return Response(
-                json.dumps({"status": "error", "message": "Invalid authentication"}),
+                json.dumps({"status": "error", "message": "Error processing webhook"}),
+                content_type="application/json",
+                status=500,
+            )
+        PROVIDER_TYPE = ProviderType.get_type(provider_name)
+        service = None
+        try:
+            service_provider_dispatcher = ServiceProviderDispatcher(request.env)
+            service = service_provider_dispatcher.get_service(PROVIDER_TYPE)
+        except ValueError as e:
+            _logger.error("Unsupported provider type: %s", str(e))
+            return Response(
+                json.dumps({"status": "error", "message": "Unsupported provider type"}),
+                content_type="application/json",
+                status=400,
+            )
+        except Exception as e:
+            _logger.error("Error getting provider service: %s", str(e))
+            return Response(
+                json.dumps(
+                    {"status": "error", "message": "Error getting provider service"}
+                ),
+                content_type="application/json",
+                status=500,
+            )
+
+        if not service.get_is_valid():
+            _logger.error("Authentication failed for provider %s", provider_name)
+            return Response(
+                json.dumps({"status": "error", "message": "Authentication failed"}),
                 content_type="application/json",
                 status=401,
+            )
+        if not service.get_is_valid_channel(payload.channel):
+            _logger.error(
+                "Invalid channel for provider %s: %s",
+                provider_name,
+                payload.channel,
+            )
+            return Response(
+                json.dumps({"status": "error", "message": "Invalid channel"}),
+                content_type="application/json",
+                status=400,
             )
 
         # ENCOLAR INMEDIATAMENTE - Esta es la clave del cambio
@@ -92,7 +137,8 @@ class ProviderWebhookController(http.Controller):
         )
 
     def _validate_authentication_by_provider_type(
-        self, provider_type: str, data: any
+        self, provider_type: ProviderType, data: any
     ) -> bool:
         """Validar la autenticación del webhook"""
+
         return True
