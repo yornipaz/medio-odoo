@@ -22,6 +22,11 @@ class ProviderWebhookController(http.Controller):
         try:
             # Decodificar JSON
             data = json.loads(raw_body.decode("utf-8"))
+            _logger.info(
+                "Received webhook for provider %s with data: %s",
+                provider_name,
+                data,
+            )
         except json.JSONDecodeError:
             return Response(
                 json.dumps({"status": "error", "message": "Invalid JSON format"}),
@@ -33,6 +38,12 @@ class ProviderWebhookController(http.Controller):
         try:
             dispatcher_webhook = WebhookDispatcher(provider_name, data)
             payload = dispatcher_webhook.extract_event()
+            # _logger.info(
+            #     "Received webhook for provider %s message %s att %s",
+            #     provider_name,
+            #     payload.message.content,
+            #     payload.message.files,
+            # )
         except Exception as e:
             _logger.error("Error extracting event from webhook: %s", str(e))
             return Response(
@@ -43,6 +54,7 @@ class ProviderWebhookController(http.Controller):
 
         PROVIDER_TYPE = ProviderType.get_type(provider_name)
         service = None
+
         try:
             service_provider_dispatcher = ServiceProviderDispatcher(request.env)
             service = service_provider_dispatcher.get_service(PROVIDER_TYPE)

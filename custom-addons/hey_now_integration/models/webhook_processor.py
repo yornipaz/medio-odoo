@@ -160,7 +160,7 @@ class WebhookProcessor(models.Model):
             # Usar el método mejorado de verificación
             existing = self.env["mail.message"].check_duplicate_by_provider_id(
                 message_id_provider
-            )  and not 
+            )
             if existing:
 
                 return existing

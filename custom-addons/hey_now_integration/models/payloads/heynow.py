@@ -158,7 +158,7 @@ class HeynowPayload:
         """
         data = self.raw.get("data", {})
         last_message_trace = data.get("lastMessageTrace", {})
-        message = last_message_trace.get("message", "")
+        message = data.get("message", "")
         meta_data = data.get("metaData", {})
         message_type = MessageEventType.TEXT
         files = None

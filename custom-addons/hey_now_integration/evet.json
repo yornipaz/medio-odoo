@@ -1,0 +1,239 @@
+{
+    "old": {
+        "event": {
+            "new": {
+                "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggOEJDNzgxRjQwRkU1MTNEMjgyMENDMkNCM0UxMjVEODgA",
+                "date": "2025-06-20T14:27:51.089Z",
+                "headerMessage": "📷"
+            },
+            "key": {
+                "channel": 35,
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "rnd": "1978906aafb6dfb8"
+            },
+            "newMessage": true,
+            "ability": "default"
+        },
+        "data": {
+            "_id": {
+                "channel": 35,
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "rnd": "1978906aafb6dfb8"
+            },
+            "isHeader": true,
+            "__EndSessionTimeOut": "2025-06-21T14:27:51.089Z",
+            "channel": 35,
+            "clientId": "573163101456",
+            "companyId": 20141,
+            "contactId": "573163101456",
+            "createdAt": "2025-06-20T14:27:51.165Z",
+            "lastUpdate": "2025-06-20T14:27:51.089Z",
+            "msgIndex": 75,
+            "options": "None",
+            "platformId": "385427144660368",
+            "session": "1978906aac984295",
+            "startBot": "2025-06-19T16:30:04.999Z",
+            "date": "2025-06-20T14:27:51.089Z",
+            "contactLastInteractionDate": "2025-06-20T14:27:51.168Z",
+            "endSession": false,
+            "firstIncomingMessage": "2025-06-19T16:30:05.608Z",
+            "headerMessage": "📷",
+            "incoming": true,
+            "lastMessageTrace": {
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggQ0IyQTIzQkI1M0U0REQxOTdEOTREQzFFNDdBQUVEQ0IA",
+                "metaData": {
+                    "temporal": [
+                        {
+                            "mimeType": "image/jpeg",
+                            "encode": "base64",
+                            "name": "1680347145982896",
+                            "size": 96873,
+                            "temporalId": "68556fd15cfa499c53365a3e",
+                            "urlFileshare": "https://ogmastorageprodpersitent.blob.core.windows.net/00020141/68556fd15cfa499c53365a3e.jpg?sv=2024-08-04&st=2025-06-20T14%3A27%3A29Z&se=2025-07-21T00%3A57%3A29Z&sr=b&sp=r&sig=xVLn1PCLneBEsoz8O%2Br6p774Sm%2F3nXOAvBTn7GPPGVw%3D",
+                            "channel": 35,
+                            "platformId": "385427144660368"
+                        }
+                    ]
+                },
+                "incoming": true,
+                "message": "New mensaje",
+                "__Hey__": {
+                    "trigger": []
+                },
+                "channel": 35,
+                "proactive": false,
+                "massive": false,
+                "endSession": false,
+                "sequence": "None",
+                "date": "2025-06-20T14:27:29.777Z",
+                "createdAt": "2025-06-20T14:27:29.822Z",
+                "lastUpdate": "2025-06-20T14:27:29.777Z",
+                "ability": "default",
+                "idAgent": 84894,
+                "event": {
+                    "new": {},
+                    "key": {
+                        "channel": 35,
+                        "platformId": "385427144660368",
+                        "clientId": "573163101456",
+                        "session": "1978906aac984295"
+                    }
+                },
+                "_id": "68556fd15cfa49230a365a40"
+            },
+            "massive": false,
+            "proactive": false,
+            "sequence": "None",
+            "whatsAppSession": true,
+            "__data": {},
+            "ability": "default",
+            "agentLastInteractionDate": "2025-06-19T18:35:34.104Z",
+            "idAgent": 84894,
+            "startPannel": "2025-06-19T18:35:28.864Z",
+            "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggOEJDNzgxRjQwRkU1MTNEMjgyMENDMkNCM0UxMjVEODgA",
+            "metaData": {
+                "temporal": [
+                    {
+                        "mimeType": "image/jpeg",
+                        "encode": "base64",
+                        "name": "702206945907597",
+                        "size": 106716,
+                        "temporalId": "68556fe7210aa727af20258b",
+                        "urlFileshare": "https://ogmastorageprodpersitent.blob.core.windows.net/00020141/68556fe7210aa727af20258b.jpg?sv=2024-08-04&st=2025-06-20T14%3A27%3A51Z&se=2025-07-21T00%3A57%3A51Z&sr=b&sp=r&sig=5fI4vjZNRM977vlJEQs2Og9jyn0aMEyypzB4qRB5n6I%3D",
+                        "channel": 35,
+                        "platformId": "385427144660368"
+                    }
+                ]
+            }
+        }
+    },
+    "new": {
+        "event": {
+            "new": {
+                "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggMUU3NEQwNTQ2Mzk3RkYzM0E0NjBFMUQ2OUUyOEI2RjkA",
+                "date": "2025-06-20T14:38:00.244Z",
+                "headerMessage": "📷"
+            },
+            "key": {
+                "channel": 35,
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "rnd": "1978906aafb6dfb8"
+            },
+            "newMessage": true,
+            "ability": "default"
+        },
+        "data": {
+            "_id": {
+                "channel": 35,
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "rnd": "1978906aafb6dfb8"
+            },
+            "isHeader": true,
+            "__EndSessionTimeOut": "2025-06-21T14:38:00.244Z",
+            "channel": 35,
+            "clientId": "573163101456",
+            "companyId": 20141,
+            "contactId": "573163101456",
+            "createdAt": "2025-06-20T14:38:00.404Z",
+            "lastUpdate": "2025-06-20T14:38:00.244Z",
+            "msgIndex": 77,
+            "options": "None",
+            "platformId": "385427144660368",
+            "session": "1978906aac984295",
+            "startBot": "2025-06-19T16:30:04.999Z",
+            "date": "2025-06-20T14:38:00.244Z",
+            "contactLastInteractionDate": "2025-06-20T14:38:00.434Z",
+            "endSession": false,
+            "firstIncomingMessage": "2025-06-19T16:30:05.608Z",
+            "headerMessage": "📷",
+            "incoming": true,
+            "lastMessageTrace": {
+                "platformId": "385427144660368",
+                "clientId": "573163101456",
+                "session": "1978906aac984295",
+                "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggMUU3NEQwNTQ2Mzk3RkYzM0E0NjBFMUQ2OUUyOEI2RjkA",
+                "metaData": {
+                    "temporal": [
+                        {
+                            "mimeType": "image/jpeg",
+                            "encode": "base64",
+                            "name": "1530846018323043",
+                            "size": 86328,
+                            "temporalId": "68557248210aa730cf20627a",
+                            "urlFileshare": "https://ogmastorageprodpersitent.blob.core.windows.net/00020141/68557248210aa730cf20627a.jpg?sv=2024-08-04&st=2025-06-20T14%3A38%3A00Z&se=2025-07-21T01%3A08%3A00Z&sr=b&sp=r&sig=pLCcjELIMpMzrzSDoBgBV3hfRjqSAdNcmlYKyOINN4A%3D",
+                            "channel": 35,
+                            "platformId": "385427144660368"
+                        }
+                    ]
+                },
+                "incoming": true,
+                "message": "Message",
+                "__Hey__": {
+                    "trigger": []
+                },
+                "channel": 35,
+                "proactive": false,
+                "massive": false,
+                "endSession": false,
+                "sequence": "None",
+                "date": "2025-06-20T14:38:00.244Z",
+                "createdAt": "2025-06-20T14:38:00.404Z",
+                "lastUpdate": "2025-06-20T14:38:00.244Z",
+                "ability": "default",
+                "idAgent": 84894,
+                "event": {
+                    "new": {
+                        "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggMUU3NEQwNTQ2Mzk3RkYzM0E0NjBFMUQ2OUUyOEI2RjkA",
+                        "date": "2025-06-20T14:38:00.244Z",
+                        "headerMessage": "📷"
+                    },
+                    "key": {
+                        "channel": 35,
+                        "platformId": "385427144660368",
+                        "clientId": "573163101456",
+                        "session": "1978906aac984295"
+                    },
+                    "newMessage": true,
+                    "ability": "default"
+                },
+                "_id": "68557248210aa7a2d6206280"
+            },
+            "massive": false,
+            "proactive": false,
+            "sequence": "None",
+            "whatsAppSession": true,
+            "__data": {},
+            "ability": "default",
+            "agentLastInteractionDate": "2025-06-19T18:35:34.104Z",
+            "idAgent": 84894,
+            "startPannel": "2025-06-19T18:35:28.864Z",
+            "idMessage": "wamid.HBgMNTczMTYzMTAxNDU2FQIAEhggMUU3NEQwNTQ2Mzk3RkYzM0E0NjBFMUQ2OUUyOEI2RjkA",
+            "metaData": {
+                "temporal": [
+                    {
+                        "mimeType": "image/jpeg",
+                        "encode": "base64",
+                        "name": "1530846018323043",
+                        "size": 86328,
+                        "temporalId": "68557248210aa730cf20627a",
+                        "urlFileshare": "https://ogmastorageprodpersitent.blob.core.windows.net/00020141/68557248210aa730cf20627a.jpg?sv=2024-08-04&st=2025-06-20T14%3A38%3A00Z&se=2025-07-21T01%3A08%3A00Z&sr=b&sp=r&sig=pLCcjELIMpMzrzSDoBgBV3hfRjqSAdNcmlYKyOINN4A%3D",
+                        "channel": 35,
+                        "platformId": "385427144660368"
+                    }
+                ]
+            },
+            "message": "Message"
+        }
+    }
+}
