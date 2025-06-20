@@ -159,7 +159,7 @@ class HeynowPayload:
         data = self.raw.get("data", {})
         last_message_trace = data.get("lastMessageTrace", {})
         message = last_message_trace.get("message", "")
-        meta_data = last_message_trace.get("metaData", {})
+        meta_data = data.get("metaData", {})
         message_type = MessageEventType.TEXT
         files = None
         if meta_data.get("temporal"):
@@ -172,8 +172,12 @@ class HeynowPayload:
 
                 message_type = MessageEventType.from_mime_type(mime_type)
 
-        message_id_provider_chat = last_message_trace.get("idMessage", "")
-        provider_message_hey_id = last_message_trace.get("idMessageHey", str(uuid4()))
+        message_id_provider_chat = last_message_trace.get(
+            "idMessageHey", self._get_custom_id()
+        )
+        provider_message_hey_id = last_message_trace.get(
+            "idMessageHey", self._get_custom_id()
+        )
 
         return MessageEvent(
             id=provider_message_hey_id,
@@ -205,9 +209,12 @@ class HeynowPayload:
                 datas=file.get("data", ""),
                 type="binary" if file.get("data") else "url",
                 mimetype=file.get("mimeType", ""),
-                description=file.get("description", ""),
-                url=file.get("url", ""),
-                file_size=file.get("fileSize", 0),
+                description=file.get(
+                    "description",
+                    f'Archivo {file.get("name", "")} de HeyNow de {HeynowChannelType.from_int(file.get("channel", 0))}',
+                ),
+                url=file.get("urlFileshare", ""),
+                file_size=file.get("size", 0),
                 metadata={
                     "encode": file.get("encode", ""),
                     "channel": HeynowChannelType.from_int(file.get("channel", 0)),
@@ -218,3 +225,10 @@ class HeynowPayload:
             )
             for file in files
         ]
+
+    def _get_custom_id(self) -> str:
+        """
+        Returns the custom ID for the Heynow payload.
+        """
+
+        return str(uuid4())

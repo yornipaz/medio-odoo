@@ -1,9 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Dict, Any, Optional, List
 from enum import Enum
 from ..provider.provider_type import ProviderType
 from uuid import uuid4
 from datetime import datetime
+import json
 
 
 class MessageEventType(Enum):
@@ -117,3 +118,33 @@ class BaseEvent:
     channel: str  # Tipo de canal de comunicacion por el cual proviene el mensaje Whatsapp,Instagram,Messeger,etc...
     is_incoming: bool  # Indica si el mensaje es entrante o saliente cuando sea True es de entrada(de un usurio) y de debe procesar
     metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def to_json(self):
+        """Convertir a JSON string"""
+        return json.dumps(asdict(self), ensure_ascii=False, indent=2)
+
+    def to_dict(self):
+        """Convertir a diccionario"""
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data):
+        """Crear desde diccionario"""
+        # Reconstruir objetos anidados
+        if "message" in data and data["message"]:
+            message_data = data["message"]
+            files = None
+            if "files" in message_data and message_data["files"]:
+                files = [FileEvent(**file_data) for file_data in message_data["files"]]
+            data["message"] = MessageEvent(
+                content=message_data["content"],
+                message_id_provider_chat=message_data.get("message_id_provider_chat"),
+                files=files,
+            )
+        return cls(**data)
+
+    @classmethod
+    def from_json(cls, json_str):
+        """Crear desde JSON string"""
+        data = json.loads(json_str)
+        return cls.from_dict(data)

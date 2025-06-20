@@ -1,5 +1,39 @@
 [
     {
+        "label": "request",
+        "importPath": "odoo.http",
+        "description": "odoo.http",
+        "isExtraImport": true,
+        "detail": "odoo.http",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "odoo.http",
+        "description": "odoo.http",
+        "isExtraImport": true,
+        "detail": "odoo.http",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
         "label": "odoo",
         "kind": 6,
         "isExtraImport": true,
@@ -529,37 +563,11 @@
         "documentation": {}
     },
     {
-        "label": "request",
-        "importPath": "odoo.http",
-        "description": "odoo.http",
+        "label": "asdict",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
         "isExtraImport": true,
-        "detail": "odoo.http",
-        "documentation": {}
-    },
-    {
-        "label": "Response",
-        "importPath": "odoo.http",
-        "description": "odoo.http",
-        "isExtraImport": true,
-        "detail": "odoo.http",
-        "documentation": {}
-    },
-    {
-        "label": "logging",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "logging",
-        "description": "logging",
-        "detail": "logging",
-        "documentation": {}
-    },
-    {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
+        "detail": "dataclasses",
         "documentation": {}
     },
     {
@@ -572,6 +580,14 @@
     },
     {
         "label": "field",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
         "importPath": "dataclasses",
         "description": "dataclasses",
         "isExtraImport": true,
@@ -684,6 +700,30 @@
         "documentation": {}
     },
     {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Dict",
         "importPath": "typing",
         "description": "typing",
@@ -709,6 +749,86 @@
     },
     {
         "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Type",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -903,6 +1023,14 @@
     },
     {
         "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
         "importPath": "abc",
         "description": "abc",
         "isExtraImport": true,
@@ -1703,7 +1831,7 @@
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.payloads.base_event",
         "description": "custom-addons.hey_now_integration.models.payloads.base_event",
-        "peekOfCode": "class BaseEvent:\n    user_id: str\n    message: MessageEvent\n    user_name: str\n    channel_name: str\n    channel: str  # Tipo de canal de comunicacion por el cual proviene el mensaje Whatsapp,Instagram,Messeger,etc...\n    is_incoming: bool  # Indica si el mensaje es entrante o saliente cuando sea True es de entrada(de un usurio) y de debe procesar\n    metadata: Dict[str, Any] = field(default_factory=dict)",
+        "peekOfCode": "class BaseEvent:\n    user_id: str\n    message: MessageEvent\n    user_name: str\n    channel_name: str\n    channel: str  # Tipo de canal de comunicacion por el cual proviene el mensaje Whatsapp,Instagram,Messeger,etc...\n    is_incoming: bool  # Indica si el mensaje es entrante o saliente cuando sea True es de entrada(de un usurio) y de debe procesar\n    metadata: Dict[str, Any] = field(default_factory=dict)\n    def to_json(self):\n        \"\"\"Convertir a JSON string\"\"\"",
         "detail": "custom-addons.hey_now_integration.models.payloads.base_event",
         "documentation": {}
     },
@@ -1753,6 +1881,15 @@
         "documentation": {}
     },
     {
+        "label": "ChatProviderModel",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.provider.chat_provider_model",
+        "description": "custom-addons.hey_now_integration.models.provider.chat_provider_model",
+        "peekOfCode": "class ChatProviderModel:\n    \"\"\"Simulación del modelo Odoo chat.provider\"\"\"\n    @staticmethod\n    def get_active_provider_config(\n        env, provider_type: str\n    ) -> Optional[ChatProviderConfig]:\n        \"\"\"Obtiene la configuración activa para un tipo de proveedor específico.\"\"\"\n        provider = (\n            env[\"chat.provider\"]\n            .sudo()",
+        "detail": "custom-addons.hey_now_integration.models.provider.chat_provider_model",
+        "documentation": {}
+    },
+    {
         "label": "ProviderDispatcher",
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.provider.dispatcher",
@@ -1780,12 +1917,66 @@
         "documentation": {}
     },
     {
+        "label": "ProviderAuthentication",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.provider.provider",
+        "description": "custom-addons.hey_now_integration.models.provider.provider",
+        "peekOfCode": "class ProviderAuthentication(ABC):\n    \"\"\"\n    Abstract base class for all providers.\n    \"\"\"\n    @abstractmethod\n    def get_auth_token(self) -> str:\n        \"\"\"\n        Get the auth token for the provider.\n        :return: auth token\n        \"\"\"",
+        "detail": "custom-addons.hey_now_integration.models.provider.provider",
+        "documentation": {}
+    },
+    {
+        "label": "ProviderConfig",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.provider.provider",
+        "description": "custom-addons.hey_now_integration.models.provider.provider",
+        "peekOfCode": "class ProviderConfig(ABC):\n    \"\"\"\n    Abstract base class for all providers.\n    \"\"\"\n    @abstractmethod\n    def get_provider_config(self) -> ChatProviderConfig:\n        \"\"\"\n        Get the configuration metadata for the provider.\n        :return: Dictionary containing configuration metadata\n        \"\"\"",
+        "detail": "custom-addons.hey_now_integration.models.provider.provider",
+        "documentation": {}
+    },
+    {
         "label": "ProviderType",
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.provider.provider_type",
         "description": "custom-addons.hey_now_integration.models.provider.provider_type",
         "peekOfCode": "class ProviderType(Enum):\n    \"\"\"\n    Enum representa los diferentes tipos de proveedores de servicios de mensajería.\n    \"\"\"\n    BOTPRESS = \"botpress\"\n    HEYNOW = \"heynow\"\n    TWILIO = \"twilio\"\n    WHATSAPP = \"whatsapp\"\n    TELEGRAM = \"telegram\"\n    FACEBOOK = \"facebook\"",
         "detail": "custom-addons.hey_now_integration.models.provider.provider_type",
+        "documentation": {}
+    },
+    {
+        "label": "ServiceProviderDispatcher",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.services.dispatcher",
+        "description": "custom-addons.hey_now_integration.models.services.dispatcher",
+        "peekOfCode": "class ServiceProviderDispatcher:\n    \"\"\"\n    Dispatcher principal para manejar múltiples proveedores.\n    Simplificado porque ya no necesita manejar configuraciones externas.\n    \"\"\"\n    def __init__(self, env):\n        self.env = env\n    def get_service(self, provider_type: ProviderType) -> ProviderService:\n        \"\"\"\n        Obtener una instancia del proveedor especificado.",
+        "detail": "custom-addons.hey_now_integration.models.services.dispatcher",
+        "documentation": {}
+    },
+    {
+        "label": "ProviderServiceFactory",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.services.factory",
+        "description": "custom-addons.hey_now_integration.models.services.factory",
+        "peekOfCode": "class ProviderServiceFactory:\n    \"\"\"\n    Factory para crear instancias de ProviderService según el tipo de proveedor.\n    Ahora cada proveedor obtiene su propia configuración automáticamente.\n    \"\"\"\n    _providers: Dict[ProviderType, Type[ProviderService]] = {\n        ProviderType.HEYNOW: HeyNowProviderService,\n    }\n    @classmethod\n    def create_provider(cls, env, provider_type: ProviderType) -> ProviderService:",
+        "detail": "custom-addons.hey_now_integration.models.services.factory",
+        "documentation": {}
+    },
+    {
+        "label": "HeyNowProviderService",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.services.heynow",
+        "description": "custom-addons.hey_now_integration.models.services.heynow",
+        "peekOfCode": "class HeyNowProviderService(ProviderService):\n    \"\"\"Implementación específica para el proveedor HeyNow.\"\"\"\n    def __init__(self, env, provider_type: ProviderType = ProviderType.HEYNOW):\n        self.env = env\n        super().__init__(env, provider_type)\n    def get_auth_token(self) -> str:\n        return self.config.auth_token if self.config is not None else \"\"\n    def get_base_url(self) -> str:\n        return self.config.base_url if self.config is not None else \"\"\n    def get_is_valid(self) -> bool:",
+        "detail": "custom-addons.hey_now_integration.models.services.heynow",
+        "documentation": {}
+    },
+    {
+        "label": "ProviderService",
+        "kind": 6,
+        "importPath": "custom-addons.hey_now_integration.models.services.provider_service",
+        "description": "custom-addons.hey_now_integration.models.services.provider_service",
+        "peekOfCode": "class ProviderService(ProviderAuthentication, ProviderConfig, ABC):\n    \"\"\"\n    Clase abstracta base que define la interfaz común para todos los proveedores.\n    Ahora obtiene la configuración automáticamente por tipo de proveedor.\n    \"\"\"\n    def __init__(self, env, provider_type: ProviderType):\n        self.provider_type = provider_type\n        self.config = self._load_config()\n        self.env = env  # Debe ser establecido por el entorno Odoo\n        if not self.config:",
+        "detail": "custom-addons.hey_now_integration.models.services.provider_service",
         "documentation": {}
     },
     {
@@ -1865,7 +2056,7 @@
         "kind": 6,
         "importPath": "custom-addons.hey_now_integration.models.webhook_processor",
         "description": "custom-addons.hey_now_integration.models.webhook_processor",
-        "peekOfCode": "class WebhookProcessor(models.Model):\n    _name = \"webhook.processor\"\n    _description = \"Webhook Event Processor\"\n    name = fields.Char(string=\"Name\", default=\"Webhook Processor\")\n    def process_webhook_event(self, provider_name, webhook_data):\n        \"\"\"\n        Procesar evento de webhook con protección mejorada contra duplicados.\n        \"\"\"\n        _logger.info(\"Processing webhook event for provider: %s\", provider_name)\n        with self.env.cr.savepoint():",
+        "peekOfCode": "class WebhookProcessor(models.Model):\n    _name = \"webhook.processor\"\n    _description = \"Webhook Event Processor\"\n    name = fields.Char(string=\"Name\", default=\"Webhook Processor\")\n    def process_webhook_event(self, provider_name: str, payload_data):\n        \"\"\"\n        Procesar evento de webhook con protección mejorada contra duplicados.\n        \"\"\"\n        with self.env.cr.savepoint():\n            try:",
         "detail": "custom-addons.hey_now_integration.models.webhook_processor",
         "documentation": {}
     },
@@ -1874,7 +2065,7 @@
         "kind": 5,
         "importPath": "custom-addons.hey_now_integration.models.webhook_processor",
         "description": "custom-addons.hey_now_integration.models.webhook_processor",
-        "peekOfCode": "_logger = logging.getLogger(__name__)\nclass WebhookProcessor(models.Model):\n    _name = \"webhook.processor\"\n    _description = \"Webhook Event Processor\"\n    name = fields.Char(string=\"Name\", default=\"Webhook Processor\")\n    def process_webhook_event(self, provider_name, webhook_data):\n        \"\"\"\n        Procesar evento de webhook con protección mejorada contra duplicados.\n        \"\"\"\n        _logger.info(\"Processing webhook event for provider: %s\", provider_name)",
+        "peekOfCode": "_logger = logging.getLogger(__name__)\nclass WebhookProcessor(models.Model):\n    _name = \"webhook.processor\"\n    _description = \"Webhook Event Processor\"\n    name = fields.Char(string=\"Name\", default=\"Webhook Processor\")\n    def process_webhook_event(self, provider_name: str, payload_data):\n        \"\"\"\n        Procesar evento de webhook con protección mejorada contra duplicados.\n        \"\"\"\n        with self.env.cr.savepoint():",
         "detail": "custom-addons.hey_now_integration.models.webhook_processor",
         "documentation": {}
     },

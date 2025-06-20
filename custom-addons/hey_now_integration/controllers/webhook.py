@@ -1,7 +1,7 @@
-from odoo import http
 from odoo.http import request, Response
 import logging
 import json
+from odoo import http
 
 from ..models.provider.provider_type import ProviderType
 from ..models.payloads.dispatcher import WebhookDispatcher
@@ -40,6 +40,7 @@ class ProviderWebhookController(http.Controller):
                 content_type="application/json",
                 status=500,
             )
+
         PROVIDER_TYPE = ProviderType.get_type(provider_name)
         service = None
         try:

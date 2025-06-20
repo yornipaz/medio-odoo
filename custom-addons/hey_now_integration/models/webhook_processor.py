@@ -1,7 +1,9 @@
+from typing import List
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import logging
 from .payloads.dispatcher import WebhookDispatcher
+from .payloads.base_event import FileEvent, BaseEvent
 
 _logger = logging.getLogger(__name__)
 
@@ -12,24 +14,21 @@ class WebhookProcessor(models.Model):
 
     name = fields.Char(string="Name", default="Webhook Processor")
 
-    def process_webhook_event(self, provider_name, webhook_data):
+    def process_webhook_event(self, provider_name: str, payload_data):
         """
         Procesar evento de webhook con protección mejorada contra duplicados.
         """
-        _logger.info("Processing webhook event for provider: %s", provider_name)
 
         with self.env.cr.savepoint():
             try:
-                # Extraer datos del mensaje
-                dispatcher = WebhookDispatcher(provider_name, webhook_data)
-                payload = dispatcher.extract_event()
+                dispatcher_webhook = WebhookDispatcher(provider_name, payload_data)
+                payload = dispatcher_webhook.extract_event()
 
                 if not payload.is_incoming:
-                    _logger.info("Skipping non-incoming message")
+
                     return {"status": "skipped", "message": "Not an incoming message"}
 
                 message_id = payload.message.message_id_provider_chat
-                _logger.info("Processing message ID: %s", message_id)
 
                 # ✅ VERIFICACIÓN MEJORADA DE DUPLICADOS
                 if message_id:
@@ -54,7 +53,6 @@ class WebhookProcessor(models.Model):
                     payload,
                 )
 
-                _logger.info("Webhook processed successfully: %s", result)
                 return result
 
             except ValueError as e:
@@ -76,8 +74,8 @@ class WebhookProcessor(models.Model):
             # Intentar obtener un lock exclusivo en la fila si existe
             self.env.cr.execute(
                 """
-                SELECT id FROM mail_message 
-                WHERE message_id_provider_chat = %s 
+                SELECT id FROM mail_message
+                WHERE message_id_provider_chat = %s
                 FOR UPDATE NOWAIT
             """,
                 (message_id_provider_chat,),
@@ -149,7 +147,9 @@ class WebhookProcessor(models.Model):
             "message_id": message_channel.id if message_channel else None,
         }
 
-    def _create_message_with_final_check(self, channel, message, partner, payload):
+    def _create_message_with_final_check(
+        self, channel, message, partner, payload: BaseEvent
+    ):
         """
         Crear mensaje con verificación final por si acaso.
         """
@@ -160,24 +160,33 @@ class WebhookProcessor(models.Model):
             # Usar el método mejorado de verificación
             existing = self.env["mail.message"].check_duplicate_by_provider_id(
                 message_id_provider
-            )
+            )  and not 
             if existing:
-                _logger.warning(
-                    "Message already exists during final check: %s", message_id_provider
-                )
+
                 return existing
 
         # Crear el mensaje
         try:
+            # ✅ PROCESAR ARCHIVOS SI EXISTEN
+            message_event = payload.message
+            attachment_ids = []
+
+            if hasattr(message_event, "files") and message_event.files:
+                attachment_ids = self._process_message_files(
+                    channel, message_event.files
+                )
+            attachment_models = self.env["ir.attachment"].sudo().browse(attachment_ids)
+            body = self._generate_message_body(message.content, attachment_models)
             # ✅ CREAR MENSAJE DE WEBHOOK - SIEMPRE skip_send_to_provider=True
             message_channel = channel.with_context(
                 skip_send_to_provider=True,  # ✅ NUNCA reenviar mensajes de webhook
                 webhook_source=True,
             ).message_post(
-                body=message.content,
+                body=body,
                 message_type="comment",
                 subtype_xmlid="mail.mt_comment",
                 author_id=partner.id,
+                attachment_ids=attachment_ids,  # ✅ ARCHIVOS ADJUNTOS
             )
 
             # ✅ MARCAR CORRECTAMENTE EL MENSAJE
@@ -208,7 +217,210 @@ class WebhookProcessor(models.Model):
         """Obtener el usuario interno (operador del chat)"""
         return self.env.ref("base.user_admin").sudo().partner_id
 
-    # Método adicional para limpiar mensajes duplicados si ya existen
+    def _process_message_files(self, channel, files: List[FileEvent]) -> List[int]:
+        """
+        Procesar lista de FileEvent y crear attachments
+        Retorna lista de IDs de attachments creados
+        """
+        attachment_ids = []
+
+        try:
+            for file_event in files:
+                attachment = self._create_attachment_from_file_event(
+                    channel, file_event
+                )
+                if attachment:
+                    attachment_ids.append(attachment.id)
+                else:
+                    _logger.warning(
+                        "Failed to create attachment for file: %s", file_event.name
+                    )
+
+            _logger.info(
+                "Processed %s files, created %s attachments",
+                len(files),
+                len(attachment_ids),
+            )
+            return attachment_ids
+
+        except Exception as e:
+            _logger.error("Error processing message files: %s", str(e))
+            return attachment_ids  # Retornar los que sí se crearon
+
+    def _create_attachment_from_file_event(self, channel, file_event: FileEvent):
+        """Crear ir.attachment desde FileEvent Maneja tanto URLs como datos base64"""
+
+        try:
+            # ✅ CASO 1: Si hay URL, descargar archivo
+            if file_event.url:
+                return self._download_and_create_attachment(file_event, channel)
+
+            # ✅ CASO 2: Si hay datos base64, usar directamente
+            elif file_event.datas:
+                return self._create_attachment_from_data(channel, file_event)
+
+            else:
+                _logger.warning("FileEvent sin URL ni datos: %s", file_event.name)
+                return False
+
+        except Exception as e:
+            _logger.error("Error processing FileEvent %s: %s", file_event.name, str(e))
+            return False
+
+    def _download_and_create_attachment(self, file_event: FileEvent, channel=None):
+        """Descargar archivo desde URL y crear attachment"""
+        try:
+            import requests
+            from urllib.parse import urlparse
+            import mimetypes
+            import base64
+
+            response = requests.get(file_event.url, timeout=10)
+            response.raise_for_status()
+
+            # Convertir a base64
+            file_data_b64 = base64.b64encode(response.content).decode("utf-8")
+
+            # Detectar mimetype si no está definido
+            mimetype = file_event.mimetype
+            if not mimetype:
+                mimetype = response.headers.get("content-type")
+                if not mimetype:
+                    mimetype, _ = mimetypes.guess_type(
+                        file_event.url or file_event.name
+                    )
+                    mimetype = mimetype or "application/octet-stream"
+
+            # Obtener nombre del archivo si no está definido
+            name = file_event.name
+            if not name:
+                parsed_url = urlparse(file_event.url)
+                path = parsed_url.path
+                if isinstance(path, bytes):
+                    path = path.decode("utf-8", errors="replace")
+                name = path.split("/")[-1] or "archivo_descargado"
+
+            # Crear attachment con todos los campos disponibles
+            attachment_data = {
+                "name": name,
+                "type": file_event.type,
+                "datas": file_data_b64,
+                "res_model": "mail.channel",  # ✅ modelo correcto,
+                "url": file_event.url,  # URL original si aplica
+                "res_id": channel.id if channel else None,
+                "mimetype": mimetype,
+            }
+
+            # ✅ CAMPOS OPCIONALES DE FileEvent
+            if file_event.description:
+                attachment_data["description"] = file_event.description
+            if file_event.access_token:
+                attachment_data["access_token"] = file_event.access_token
+            if file_event.checksum:
+                attachment_data["checksum"] = file_event.checksum
+
+            attachment = self.env["ir.attachment"].sudo().create(attachment_data)
+
+            _logger.info(
+                "Downloaded and created attachment from URL: %s -> ID: %s",
+                file_event.url,
+                attachment.id,
+            )
+            return attachment
+
+        except Exception as e:
+            _logger.error(
+                "Error downloading file from URL %s: %s", file_event.url, str(e)
+            )
+            return False
+
+    def _create_attachment_from_data(self, channel, file_event: FileEvent):
+        """Crear attachment desde datos base64 existentes"""
+        try:
+            import mimetypes
+
+            # Limpiar base64 si viene con prefijo data:
+            datas = file_event.datas
+            if datas.startswith("data:"):
+                # Extraer mimetype del data URI si no está definido
+                if not file_event.mimetype:
+                    mimetype_part = datas.split(";")[0].split(":")[1]
+                    file_event.mimetype = mimetype_part
+                datas = datas.split(",")[1]
+
+            # Detectar mimetype si no está definido
+            mimetype = file_event.mimetype
+            if not mimetype and file_event.name:
+                mimetype, _ = mimetypes.guess_type(file_event.name)
+                mimetype = mimetype or "application/octet-stream"
+
+            # Crear attachment con todos los campos
+            attachment_data = {
+                "name": file_event.name or "archivo_webhook",
+                "type": file_event.type,
+                "datas": datas,
+                "res_model": "mail.channel",  # ✅ modelo correcto,
+                "res_id": channel.id,
+                "url": file_event.url,  # URL original si aplica
+                "mimetype": mimetype,
+            }
+
+            # ✅ CAMPOS OPCIONALES DE FileEvent
+            if file_event.description:
+                attachment_data["description"] = file_event.description
+            if file_event.access_token:
+                attachment_data["access_token"] = file_event.access_token
+            if file_event.checksum:
+                attachment_data["checksum"] = file_event.checksum
+
+            attachment = self.env["ir.attachment"].sudo().create(attachment_data)
+
+            _logger.info(
+                "Created attachment from base64 data: %s -> ID: %s",
+                file_event.name,
+                attachment.id,
+            )
+            return attachment
+
+        except Exception as e:
+            _logger.error(
+                "Error creating attachment from base64 for %s: %s",
+                file_event.name,
+                str(e),
+            )
+            return False
+
+    # ✅ MÉTODO AUXILIAR PARA VALIDAR ARCHIVOS ANTES DE PROCESAR
+    def _validate_file_event(self, file_event: FileEvent) -> bool:
+        """Validar que FileEvent tiene los datos mínimos necesarios"""
+        if not file_event.name:
+            _logger.warning("FileEvent without name")
+            return False
+
+        if not file_event.url and not file_event.datas:
+            _logger.warning("FileEvent %s without URL or data", file_event.name)
+            return False
+
+        # Validar que base64 es válido si está presente
+        if file_event.datas:
+            try:
+                # Limpiar prefijo si existe
+                data_to_validate = file_event.datas
+                if data_to_validate.startswith("data:"):
+                    data_to_validate = data_to_validate.split(",")[1]
+
+                # Intentar decodificar
+                base64.b64decode(data_to_validate)
+                return True
+            except Exception as e:
+                _logger.warning(
+                    "FileEvent %s has invalid base64 data: %s", file_event.name, str(e)
+                )
+                return False
+
+        return True
+        # Método adicional para limpiar mensajes duplicados si ya existen
+
     @api.model
     def cleanup_duplicate_messages(self):
         """
@@ -276,3 +488,34 @@ class WebhookProcessor(models.Model):
             "regular_messages_24h": stats.get("regular", 0),
             "total_messages_24h": sum(stats.values()),
         }
+
+    def _generate_message_body(
+        self, original_body: str, attachments: List[models.Model]
+    ) -> str:
+        """
+        Genera el contenido del body del mensaje incluyendo vista previa de imágenes y enlaces a archivos.
+        """
+        preview_parts = []
+
+        for att in attachments:
+            mimetype = att.mimetype or ""
+            file_url = f"/web/content/{att.id}"
+
+            if mimetype.startswith("image/"):
+                # Mostrar imagen
+                preview_parts.append(
+                    f'<img src="{file_url}" style="max-width: 400px;" /><br/>'
+                )
+            elif mimetype == "application/pdf":
+                # Mostrar PDF embebido
+                preview_parts.append(
+                    f'<embed src="{file_url}" type="application/pdf" width="100%" height="600px"><br/>'
+                )
+            else:
+                # Mostrar como enlace
+                preview_parts.append(
+                    f'<a href="{file_url}" target="_blank">📎 {att.name}</a><br/>'
+                )
+
+        # Combinar el texto original con los previews
+        return (original_body or "") + "<br/>" + "".join(preview_parts)
