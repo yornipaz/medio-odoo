@@ -176,7 +176,7 @@ class WebhookProcessor(models.Model):
                     channel, message_event.files
                 )
             attachment_models = self.env["ir.attachment"].sudo().browse(attachment_ids)
-            body = self._generate_message_body(message.content, attachment_models)
+            body = self.generate_message_body_native(message.content, attachment_models)
             # ✅ CREAR MENSAJE DE WEBHOOK - SIEMPRE skip_send_to_provider=True
             message_channel = channel.with_context(
                 skip_send_to_provider=True,  # ✅ NUNCA reenviar mensajes de webhook
@@ -489,33 +489,294 @@ class WebhookProcessor(models.Model):
             "total_messages_24h": sum(stats.values()),
         }
 
-    def _generate_message_body(
+    # Método alternativo usando templates nativos de Odoo
+
+    def generate_message_body_native(
         self, original_body: str, attachments: List[models.Model]
     ) -> str:
         """
-        Genera el contenido del body del mensaje incluyendo vista previa de imágenes y enlaces a archivos.
+        Genera el contenido usando el motor de templates nativo de Odoo
+        para obtener exactamente la misma representación.
         """
-        preview_parts = []
+        if not attachments:
+            return original_body or ""
+        return self.generate_message_body(original_body, attachments)
 
-        for att in attachments:
-            mimetype = att.mimetype or ""
-            file_url = f"/web/content/{att.id}"
+        # # Renderizar usando el template nativo de mail.message
+        # try:
+        #     # Obtener el template de attachments de Odoo
+        #     template = (
+        #         self.env["ir.ui.view"]
+        #         .sudo()
+        #         ._render_template(
+        #             "mail.message_attachment_list",
+        #             {
+        #                 "attachments": attachments,
+        #                 "message": self,  # Si tienes acceso al mensaje
+        #             },
+        #         )
+        #     )
 
-            if mimetype.startswith("image/"):
-                # Mostrar imagen
-                preview_parts.append(
-                    f'<img src="{file_url}" style="max-width: 400px;" /><br/>'
-                )
-            elif mimetype == "application/pdf":
-                # Mostrar PDF embebido
-                preview_parts.append(
-                    f'<embed src="{file_url}" type="application/pdf" width="100%" height="600px"><br/>'
-                )
-            else:
-                # Mostrar como enlace
-                preview_parts.append(
-                    f'<a href="{file_url}" target="_blank">📎 {att.name}</a><br/>'
-                )
+        #     body_parts = [original_body or "", template]
+        #     return "<br/>".join(filter(None, body_parts))
 
-        # Combinar el texto original con los previews
-        return (original_body or "") + "<br/>" + "".join(preview_parts)
+        # except Exception as e:
+        #     # Fallback al método manual si no funciona el template
+        #     return self.generate_message_body(original_body, attachments)
+
+    def generate_message_body(
+        self, original_body: str, attachments: List[models.Model]
+    ) -> str:
+        """
+        Genera el contenido del body del mensaje usando el mismo formato
+        que Odoo utiliza nativamente para los attachments.
+        """
+        if not attachments:
+            return original_body or ""
+
+        # El body original va primero
+        body_parts = [original_body or ""]
+
+        # Generar los attachments usando la estructura nativa de Odoo
+        attachment_html = self._generate_native_attachments_html(attachments)
+        if attachment_html:
+            body_parts.append(attachment_html)
+
+        return "<br/>".join(filter(None, body_parts))
+
+    def _generate_native_attachments_html(self, attachments: List[models.Model]) -> str:
+        """
+        Genera HTML para attachments usando la estructura nativa de Odoo.
+        """
+        if not attachments:
+            return ""
+
+        attachment_items = []
+
+        for attachment in attachments:
+            attachment_html = self._render_single_attachment(attachment)
+            if attachment_html:
+                attachment_items.append(attachment_html)
+
+        if not attachment_items:
+            return ""
+
+        # Contenedor principal similar al que usa Odoo
+        return f"""
+        <div class="o_mail_attachment_list">
+            {"".join(attachment_items)}
+        </div>
+        """
+
+    def _render_single_attachment(self, attachment) -> str:
+        """
+        Renderiza un attachment individual usando la estructura de Odoo.
+        """
+
+        mimetype = attachment.mimetype or ""
+        file_size = self._format_file_size(attachment.file_size or 0)
+        file_url = f"/web/content/{attachment.id}"
+        download_url = f"/web/content/{attachment.id}?download=true"
+
+        # Determinar el icono basado en el tipo de archivo
+        file_icon = self._get_file_icon(mimetype, attachment.name)
+
+        if mimetype.startswith("image/"):
+            return self._render_image_attachment(
+                attachment, file_url, download_url, file_size
+            )
+        elif mimetype == "application/pdf":
+            return self._render_pdf_attachment(
+                attachment, file_url, download_url, file_size, file_icon
+            )
+        elif mimetype.startswith("video/"):
+            return self._render_video_attachment(
+                attachment, file_url, download_url, file_size, file_icon
+            )
+        elif mimetype.startswith("audio/"):
+            return self._render_audio_attachment(
+                attachment, file_url, download_url, file_size, file_icon
+            )
+        else:
+            return self._render_generic_attachment(
+                attachment, file_url, download_url, file_size, file_icon
+            )
+
+    def _render_image_attachment(
+        self, attachment, file_url, download_url, file_size
+    ) -> str:
+        """Renderiza attachment de imagen como lo hace Odoo."""
+        import mimetypes
+
+        extension = mimetypes.guess_extension(attachment.mimetype) or ".jpg"
+        return f"""
+            <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages d-flex flex-grow-1 flex-wrap">
+	            <div role="menu" class="o_AttachmentList_attachment mw-100 mb-1 me-1" aria-label="{attachment.name+extension}" >
+	        	    <div class="o_AttachmentImage d-flex position-relative flex-shrink-0" tabindex="0" aria-label="View image" role="menuitem" title="{attachment.name}{extension}" data-id="{attachment.id}" data-mimetype="{attachment.mimetype}">
+	        		    <img class="img img-fluid my-0 mx-auto" src="{file_url}"  alt="{attachment.name}{extension}" style="max-width: min(100%, 1920px); max-height: 300px;">
+	        			    <div class="o_AttachmentImage_imageOverlay position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
+	        				  
+	        				    <div class="o_AttachmentImage_action o_AttachmentImage_actionDownload btn btn-sm btn-dark rounded opacity-75 opacity-100-hover mt-auto" title="Descargar">
+                					     <a href="{download_url}" class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0 bg-300" 
+                                            title="Descargar" download="{attachment.name}{extension}">
+                                            <i class="fa fa-download"></i>
+                                         </a>
+	        				    </div>
+	        			    </div>
+	        		</div>
+	        	</div>
+	        </div>
+        """
+
+    def _render_pdf_attachment(
+        self, attachment, file_url, download_url, file_size, file_icon
+    ) -> str:
+        """Renderiza attachment PDF como lo hace Odoo."""
+        return f"""
+        	<div class="o_AttachmentList_attachment mw-100 mb-1 me-1">
+        		<div class="o_AttachmentCard o-has-card-details d-flex rounded bg-300 o-viewable" role="menu" title="{attachment.name}.pdf" aria-label="{attachment.name}.pdf" data-id="{attachment.id}">
+        			<div class="o_AttachmentCard_image o_image flex-shrink-0 m-1 o-attachment-viewable opacity-75-hover" role="menuitem" aria-label="Preview" tabindex="0" data-mimetype="application/pdf"></div>
+        			<div class="o_AttachmentCard_details d-flex justify-content-center flex-column px-1">
+        				<div class="o_AttachmentCard_filename text-truncate">{attachment.name}.pdf</div>
+        				<small class="o_AttachmentCard_extension text-uppercase">pdf</small>
+        			</div>
+        			<div class="o_AttachmentCard_aside position-relative rounded-end overflow-hidden o-hasMultipleActions d-flex flex-column">
+                    	<button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0 bg-300" title="Eliminar">
+                    		<i class="fa fa-trash" role="img" aria-label="Remove"></i>
+                    	</button>
+                    	  <a href="{download_url}" class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0 bg-300" 
+                       title="Descargar" download="{attachment.name}.pdf">
+                        <i class="fa fa-download"></i>
+                        </a>
+                    </div>
+        		</div>
+        	</div>
+        """
+
+    def _render_video_attachment(
+        self, attachment, file_url, download_url, file_size, file_icon
+    ) -> str:
+        """Renderiza attachment de video."""
+        return f"""
+        <div class="o_mail_attachment o_mail_attachment_video" data-id="{attachment.id}">
+            <div class="o_mail_attachment_video_container">
+                <video controls style="max-width: 100%; max-height: 300px;">
+                    <source src="{file_url}" type="{attachment.mimetype}">
+                    Tu navegador no soporta el elemento video.
+                </video>
+            </div>
+            <div class="o_mail_attachment_info">
+                <div class="o_mail_attachment_info_text">
+                    <i class="{file_icon}"></i>
+                    <span class="o_mail_attachment_name" title="{attachment.name}">{attachment.name}</span>
+                    <small class="o_mail_attachment_size text-muted">{file_size}</small>
+                </div>
+                <div class="o_mail_attachment_actions">
+                    <a href="{download_url}" class="o_mail_attachment_download btn btn-sm btn-outline-secondary" 
+                       title="Descargar" download="{attachment.name}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        """
+
+    def _render_audio_attachment(
+        self, attachment, file_url, download_url, file_size, file_icon
+    ) -> str:
+        """Renderiza attachment de audio."""
+        return f"""
+        <div class="o_mail_attachment o_mail_attachment_audio" data-id="{attachment.id}">
+            <div class="o_mail_attachment_audio_container">
+                <audio controls style="width: 100%;">
+                    <source src="{file_url}" type="{attachment.mimetype}">
+                    Tu navegador no soporta el elemento audio.
+                </audio>
+            </div>
+            <div class="o_mail_attachment_info">
+                <div class="o_mail_attachment_info_text">
+                    <i class="{file_icon}"></i>
+                    <span class="o_mail_attachment_name" title="{attachment.name}">{attachment.name}</span>
+                    <small class="o_mail_attachment_size text-muted">{file_size}</small>
+                </div>
+                <div class="o_mail_attachment_actions">
+                    <a href="{download_url}" class="o_mail_attachment_download btn btn-sm btn-outline-secondary" 
+                       title="Descargar" download="{attachment.name}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        """
+
+    def _render_generic_attachment(
+        self, attachment, file_url, download_url, file_size, file_icon
+    ) -> str:
+        """Renderiza attachment genérico como lo hace Odoo."""
+        return f"""
+        <div class="o_mail_attachment o_mail_attachment_generic" data-id="{attachment.id}">
+            <div class="o_mail_attachment_info">
+                <div class="o_mail_attachment_info_text">
+                    <i class="{file_icon}"></i>
+                    <span class="o_mail_attachment_name" title="{attachment.name}">{attachment.name}</span>
+                    <small class="o_mail_attachment_size text-muted">{file_size}</small>
+                </div>
+                <div class="o_mail_attachment_actions">
+                    <a href="{file_url}" class="btn btn-sm btn-outline-primary" target="_blank" title="Abrir">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+                    <a href="{download_url}" class="o_mail_attachment_download btn btn-sm btn-outline-secondary" 
+                       title="Descargar" download="{attachment.name}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        """
+
+    def _get_file_icon(self, mimetype: str, filename: str) -> str:
+        """Retorna el icono apropiado para el tipo de archivo."""
+        if mimetype.startswith("image/"):
+            return "fa fa-file-image-o"
+        elif mimetype == "application/pdf":
+            return "fa fa-file-pdf-o"
+        elif mimetype.startswith("video/"):
+            return "fa fa-file-video-o"
+        elif mimetype.startswith("audio/"):
+            return "fa fa-file-audio-o"
+        elif mimetype in [
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ]:
+            return "fa fa-file-word-o"
+        elif mimetype in [
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ]:
+            return "fa fa-file-excel-o"
+        elif mimetype in [
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        ]:
+            return "fa fa-file-powerpoint-o"
+        elif mimetype == "application/zip" or mimetype.startswith("application/x-"):
+            return "fa fa-file-archive-o"
+        elif mimetype == "text/plain":
+            return "fa fa-file-text-o"
+        else:
+            return "fa fa-file-o"
+
+    def _format_file_size(self, size_bytes: int) -> str:
+        """Formatea el tamaño del archivo de manera legible."""
+        if size_bytes == 0:
+            return "0 B"
+
+        size_names = ["B", "KB", "MB", "GB"]
+        i = 0
+        size = float(size_bytes)
+
+        while size >= 1024.0 and i < len(size_names) - 1:
+            size /= 1024.0
+            i += 1
+
+        return f"{size:.1f} {size_names[i]}"

@@ -14,5 +14,10 @@
         "views/provider_config_settings_views.xml",
         "views/res_partner_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "hey_now_integration/static/src/css/conversation_multimedia.css",
+        ],
+    },
     "post_init_hook": "assign_uuids_to_old_messages",
 }
